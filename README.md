@@ -1,6 +1,6 @@
 exptex
 =============
-An expression-transforming LaTeX preprocessor.
+An expression-transforming LaTeX preprocessor. *Work in Progress.*
 
 Input:
 ```
