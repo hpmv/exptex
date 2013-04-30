@@ -208,55 +208,61 @@ public class exptexParser extends Parser {
 		ExprContext _localctx = new ExprContext(_ctx, getState());
 		enterRule(_localctx, 4, RULE_expr);
 		((ExprContext)_localctx).value =  new Expr(); boolean first = true;boolean one = true;
-		int _la;
 		try {
+			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(55); 
 			_errHandler.sync(this);
-			_la = _input.LA(1);
+			_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
 			do {
-				{
-				setState(55);
-				switch (_input.LA(1)) {
-				case MATH_SYMBOL:
+				switch (_alt) {
+				case 1:
 					{
-					setState(50); ((ExprContext)_localctx).MATH_SYMBOL = match(MATH_SYMBOL);
-					_localctx.value.append(ExpTexUtils.symbolToLaTeX((((ExprContext)_localctx).MATH_SYMBOL!=null?((ExprContext)_localctx).MATH_SYMBOL.getText():null))); first = false; one = false;
+					setState(55);
+					switch (_input.LA(1)) {
+					case MATH_SYMBOL:
+						{
+						setState(50); ((ExprContext)_localctx).MATH_SYMBOL = match(MATH_SYMBOL);
+						_localctx.value.append(ExpTexUtils.symbolToLaTeX((((ExprContext)_localctx).MATH_SYMBOL!=null?((ExprContext)_localctx).MATH_SYMBOL.getText():null))); first = false; one = false;
+						}
+						break;
+					case 9:
+					case 10:
+					case 11:
+					case 13:
+					case 14:
+					case SUM:
+					case PROD:
+					case LIMIT:
+					case PROB:
+					case FUNC:
+					case ID:
+					case NUM:
+					case STRING:
+						{
+						setState(52); ((ExprContext)_localctx).single_expr = single_expr();
+						if (first)
+						                   { _localctx.value.inherit(((ExprContext)_localctx).single_expr.value); first = false;}
+						                   else
+						                   { if (one) { _localctx.value.set(_localctx.value.flatten(false)); }
+						                     _localctx.value.append(((ExprContext)_localctx).single_expr.value.flatten(false)); 
+						                     one = false;}
+						                   
+						}
+						break;
+					default:
+						throw new NoViableAltException(this);
 					}
-					break;
-				case 9:
-				case 10:
-				case 11:
-				case 13:
-				case 14:
-				case SUM:
-				case PROD:
-				case LIMIT:
-				case PROB:
-				case FUNC:
-				case ID:
-				case NUM:
-				case STRING:
-					{
-					setState(52); ((ExprContext)_localctx).single_expr = single_expr();
-					if (first)
-					                   { _localctx.value.inherit(((ExprContext)_localctx).single_expr.value); first = false;}
-					                   else
-					                   { if (one) { _localctx.value.set(_localctx.value.flatten(false)); }
-					                     _localctx.value.append(((ExprContext)_localctx).single_expr.value.flatten(false)); 
-					                     one = false;}
-					                   
 					}
 					break;
 				default:
 					throw new NoViableAltException(this);
 				}
-				}
 				setState(57); 
 				_errHandler.sync(this);
-				_la = _input.LA(1);
-			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << 9) | (1L << 10) | (1L << 11) | (1L << 13) | (1L << 14) | (1L << SUM) | (1L << PROD) | (1L << LIMIT) | (1L << PROB) | (1L << FUNC) | (1L << ID) | (1L << NUM) | (1L << STRING) | (1L << MATH_SYMBOL))) != 0) );
+				_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
+			} while ( _alt!=2 && _alt!=-1 );
 			}
 		}
 		catch (RecognitionException re) {
@@ -1056,16 +1062,17 @@ public class exptexParser extends Parser {
 	public static class SumContext extends ParserRuleContext {
 		public Expr value;
 		public Single_exprContext single_expr;
+		public ExprContext expr;
 		public TerminalNode OVER() { return getToken(exptexParser.OVER, 0); }
 		public TerminalNode FOR() { return getToken(exptexParser.FOR, 0); }
-		public Single_exprContext single_expr(int i) {
-			return getRuleContext(Single_exprContext.class,i);
-		}
-		public List<Single_exprContext> single_expr() {
-			return getRuleContexts(Single_exprContext.class);
+		public Single_exprContext single_expr() {
+			return getRuleContext(Single_exprContext.class,0);
 		}
 		public TerminalNode SUM() { return getToken(exptexParser.SUM, 0); }
 		public TerminalNode OF() { return getToken(exptexParser.OF, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
 		public SumContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1088,60 +1095,61 @@ public class exptexParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(254);
+			setState(255);
 			switch ( getInterpreter().adaptivePredict(_input,19,_ctx) ) {
 			case 1:
 				{
 				setState(225); match(SUM);
-				setState(226); ((SumContext)_localctx).single_expr = single_expr();
+				setState(226); match(OF);
+				setState(227); ((SumContext)_localctx).single_expr = single_expr();
 				a = ((SumContext)_localctx).single_expr.value;
-				setState(228);
+				setState(229);
 				_la = _input.LA(1);
 				if ( !(_la==FOR || _la==OVER) ) {
 				_errHandler.recoverInline(this);
 				}
 				consume();
-				setState(229); ((SumContext)_localctx).single_expr = single_expr();
-				b = ((SumContext)_localctx).single_expr.value;
-				setState(231); match(DOT_DOT);
-				setState(232); ((SumContext)_localctx).single_expr = single_expr();
-				c = ((SumContext)_localctx).single_expr.value;
+				setState(230); ((SumContext)_localctx).expr = expr();
+				b = ((SumContext)_localctx).expr.value;
+				setState(232); match(DOT_DOT);
+				setState(233); ((SumContext)_localctx).expr = expr();
+				c = ((SumContext)_localctx).expr.value;
 				}
 				break;
 
 			case 2:
 				{
-				setState(235); match(SUM);
-				setState(236);
+				setState(236); match(SUM);
+				setState(237);
 				_la = _input.LA(1);
 				if ( !(_la==FOR || _la==OVER) ) {
 				_errHandler.recoverInline(this);
 				}
 				consume();
-				setState(237); ((SumContext)_localctx).single_expr = single_expr();
-				b = ((SumContext)_localctx).single_expr.value;
-				setState(239); match(DOT_DOT);
-				setState(240); ((SumContext)_localctx).single_expr = single_expr();
-				c = ((SumContext)_localctx).single_expr.value;
-				setState(242); match(OF);
-				setState(243); ((SumContext)_localctx).single_expr = single_expr();
+				setState(238); ((SumContext)_localctx).expr = expr();
+				b = ((SumContext)_localctx).expr.value;
+				setState(240); match(DOT_DOT);
+				setState(241); ((SumContext)_localctx).expr = expr();
+				c = ((SumContext)_localctx).expr.value;
+				setState(243); match(OF);
+				setState(244); ((SumContext)_localctx).single_expr = single_expr();
 				a = ((SumContext)_localctx).single_expr.value;
 				}
 				break;
 
 			case 3:
 				{
-				setState(246); match(SUM);
-				setState(247);
+				setState(247); match(SUM);
+				setState(248);
 				_la = _input.LA(1);
 				if ( !(_la==FOR || _la==OVER) ) {
 				_errHandler.recoverInline(this);
 				}
 				consume();
-				setState(248); ((SumContext)_localctx).single_expr = single_expr();
-				b=((SumContext)_localctx).single_expr.value;
-				setState(250); match(OF);
-				setState(251); ((SumContext)_localctx).single_expr = single_expr();
+				setState(249); ((SumContext)_localctx).expr = expr();
+				b=((SumContext)_localctx).expr.value;
+				setState(251); match(OF);
+				setState(252); ((SumContext)_localctx).single_expr = single_expr();
 				a=((SumContext)_localctx).single_expr.value;
 				}
 				break;
@@ -1163,15 +1171,16 @@ public class exptexParser extends Parser {
 	public static class ProdContext extends ParserRuleContext {
 		public Expr value;
 		public Single_exprContext single_expr;
+		public ExprContext expr;
 		public TerminalNode OVER() { return getToken(exptexParser.OVER, 0); }
 		public TerminalNode FOR() { return getToken(exptexParser.FOR, 0); }
-		public Single_exprContext single_expr(int i) {
-			return getRuleContext(Single_exprContext.class,i);
-		}
-		public List<Single_exprContext> single_expr() {
-			return getRuleContexts(Single_exprContext.class);
+		public Single_exprContext single_expr() {
+			return getRuleContext(Single_exprContext.class,0);
 		}
 		public TerminalNode OF() { return getToken(exptexParser.OF, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
 		public TerminalNode PROD() { return getToken(exptexParser.PROD, 0); }
 		public ProdContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1195,60 +1204,61 @@ public class exptexParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(287);
+			setState(289);
 			switch ( getInterpreter().adaptivePredict(_input,20,_ctx) ) {
 			case 1:
 				{
-				setState(258); match(PROD);
-				setState(259); ((ProdContext)_localctx).single_expr = single_expr();
+				setState(259); match(PROD);
+				setState(260); match(OF);
+				setState(261); ((ProdContext)_localctx).single_expr = single_expr();
 				a = ((ProdContext)_localctx).single_expr.value;
-				setState(261);
+				setState(263);
 				_la = _input.LA(1);
 				if ( !(_la==FOR || _la==OVER) ) {
 				_errHandler.recoverInline(this);
 				}
 				consume();
-				setState(262); ((ProdContext)_localctx).single_expr = single_expr();
-				b = ((ProdContext)_localctx).single_expr.value;
-				setState(264); match(DOT_DOT);
-				setState(265); ((ProdContext)_localctx).single_expr = single_expr();
-				c = ((ProdContext)_localctx).single_expr.value;
+				setState(264); ((ProdContext)_localctx).expr = expr();
+				b = ((ProdContext)_localctx).expr.value;
+				setState(266); match(DOT_DOT);
+				setState(267); ((ProdContext)_localctx).expr = expr();
+				c = ((ProdContext)_localctx).expr.value;
 				}
 				break;
 
 			case 2:
 				{
-				setState(268); match(PROD);
-				setState(269);
+				setState(270); match(PROD);
+				setState(271);
 				_la = _input.LA(1);
 				if ( !(_la==FOR || _la==OVER) ) {
 				_errHandler.recoverInline(this);
 				}
 				consume();
-				setState(270); ((ProdContext)_localctx).single_expr = single_expr();
-				b = ((ProdContext)_localctx).single_expr.value;
-				setState(272); match(DOT_DOT);
-				setState(273); ((ProdContext)_localctx).single_expr = single_expr();
-				c = ((ProdContext)_localctx).single_expr.value;
-				setState(275); match(OF);
-				setState(276); ((ProdContext)_localctx).single_expr = single_expr();
+				setState(272); ((ProdContext)_localctx).expr = expr();
+				b = ((ProdContext)_localctx).expr.value;
+				setState(274); match(DOT_DOT);
+				setState(275); ((ProdContext)_localctx).expr = expr();
+				c = ((ProdContext)_localctx).expr.value;
+				setState(277); match(OF);
+				setState(278); ((ProdContext)_localctx).single_expr = single_expr();
 				a = ((ProdContext)_localctx).single_expr.value;
 				}
 				break;
 
 			case 3:
 				{
-				setState(279); match(PROD);
-				setState(280);
+				setState(281); match(PROD);
+				setState(282);
 				_la = _input.LA(1);
 				if ( !(_la==FOR || _la==OVER) ) {
 				_errHandler.recoverInline(this);
 				}
 				consume();
-				setState(281); ((ProdContext)_localctx).single_expr = single_expr();
-				b=((ProdContext)_localctx).single_expr.value;
-				setState(283); match(OF);
-				setState(284); ((ProdContext)_localctx).single_expr = single_expr();
+				setState(283); ((ProdContext)_localctx).expr = expr();
+				b=((ProdContext)_localctx).expr.value;
+				setState(285); match(OF);
+				setState(286); ((ProdContext)_localctx).single_expr = single_expr();
 				a=((ProdContext)_localctx).single_expr.value;
 				}
 				break;
@@ -1269,15 +1279,16 @@ public class exptexParser extends Parser {
 
 	public static class ProboverContext extends ParserRuleContext {
 		public Expr value;
+		public ExprContext expr;
 		public Single_exprContext single_expr;
 		public TerminalNode OVER() { return getToken(exptexParser.OVER, 0); }
-		public Single_exprContext single_expr(int i) {
-			return getRuleContext(Single_exprContext.class,i);
-		}
-		public List<Single_exprContext> single_expr() {
-			return getRuleContexts(Single_exprContext.class);
+		public Single_exprContext single_expr() {
+			return getRuleContext(Single_exprContext.class,0);
 		}
 		public TerminalNode OF() { return getToken(exptexParser.OF, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
 		public TerminalNode PROB() { return getToken(exptexParser.PROB, 0); }
 		public ProboverContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1298,17 +1309,17 @@ public class exptexParser extends Parser {
 		enterRule(_localctx, 26, RULE_probover);
 		((ProboverContext)_localctx).value =  new Expr(); Expr a,b;a=b=null;
 		try {
-			setState(304);
+			setState(306);
 			switch ( getInterpreter().adaptivePredict(_input,21,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(291); match(PROB);
-				setState(292); match(OVER);
-				setState(293); ((ProboverContext)_localctx).single_expr = single_expr();
-				b = ((ProboverContext)_localctx).single_expr.value;
-				setState(295); match(OF);
-				setState(296); ((ProboverContext)_localctx).single_expr = single_expr();
+				setState(293); match(PROB);
+				setState(294); match(OVER);
+				setState(295); ((ProboverContext)_localctx).expr = expr();
+				b = ((ProboverContext)_localctx).expr.value;
+				setState(297); match(OF);
+				setState(298); ((ProboverContext)_localctx).single_expr = single_expr();
 				a = ((ProboverContext)_localctx).single_expr.value;_localctx.value.atomic(ExpTexUtils.prob(a, b));
 				}
 				break;
@@ -1316,9 +1327,9 @@ public class exptexParser extends Parser {
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(299); match(PROB);
-				setState(300); match(OF);
-				setState(301); ((ProboverContext)_localctx).single_expr = single_expr();
+				setState(301); match(PROB);
+				setState(302); match(OF);
+				setState(303); ((ProboverContext)_localctx).single_expr = single_expr();
 				a=((ProboverContext)_localctx).single_expr.value; _localctx.value.atomic(ExpTexUtils.prob(a, null));
 				}
 				break;
@@ -1337,15 +1348,16 @@ public class exptexParser extends Parser {
 
 	public static class LimContext extends ParserRuleContext {
 		public Expr value;
+		public ExprContext expr;
 		public Single_exprContext single_expr;
 		public TerminalNode AS() { return getToken(exptexParser.AS, 0); }
-		public Single_exprContext single_expr(int i) {
-			return getRuleContext(Single_exprContext.class,i);
-		}
-		public List<Single_exprContext> single_expr() {
-			return getRuleContexts(Single_exprContext.class);
+		public Single_exprContext single_expr() {
+			return getRuleContext(Single_exprContext.class,0);
 		}
 		public TerminalNode OF() { return getToken(exptexParser.OF, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
 		public TerminalNode LIMIT() { return getToken(exptexParser.LIMIT, 0); }
 		public LimContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1368,12 +1380,12 @@ public class exptexParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(306); match(LIMIT);
-			setState(307); match(AS);
-			setState(308); ((LimContext)_localctx).single_expr = single_expr();
-			b = ((LimContext)_localctx).single_expr.value;
-			setState(310); match(OF);
-			setState(311); ((LimContext)_localctx).single_expr = single_expr();
+			setState(308); match(LIMIT);
+			setState(309); match(AS);
+			setState(310); ((LimContext)_localctx).expr = expr();
+			b = ((LimContext)_localctx).expr.value;
+			setState(312); match(OF);
+			setState(313); ((LimContext)_localctx).single_expr = single_expr();
 			a = ((LimContext)_localctx).single_expr.value; _localctx.value.set(ExpTexUtils.bigop("\\lim", a, b, null));
 			}
 		}
@@ -1428,13 +1440,13 @@ public class exptexParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(317);
+			setState(319);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==SPACE || _la==NEWLINE) {
 				{
 				{
-				setState(314);
+				setState(316);
 				_la = _input.LA(1);
 				if ( !(_la==SPACE || _la==NEWLINE) ) {
 				_errHandler.recoverInline(this);
@@ -1442,33 +1454,33 @@ public class exptexParser extends Parser {
 				consume();
 				}
 				}
-				setState(319);
+				setState(321);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(326);
+			setState(328);
 			switch ( getInterpreter().adaptivePredict(_input,23,_ctx) ) {
 			case 1:
 				{
-				setState(320); ((StartContext)_localctx).align = align();
+				setState(322); ((StartContext)_localctx).align = align();
 				((StartContext)_localctx).value =  ((StartContext)_localctx).align.value; ((StartContext)_localctx).isMath =  true;
 				}
 				break;
 
 			case 2:
 				{
-				setState(323); ((StartContext)_localctx).expr = expr();
+				setState(325); ((StartContext)_localctx).expr = expr();
 				((StartContext)_localctx).value =  ((StartContext)_localctx).expr.value.flatten(false); ((StartContext)_localctx).isMath =  false;
 				}
 				break;
 			}
-			setState(331);
+			setState(333);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==SPACE || _la==NEWLINE) {
 				{
 				{
-				setState(328);
+				setState(330);
 				_la = _input.LA(1);
 				if ( !(_la==SPACE || _la==NEWLINE) ) {
 				_errHandler.recoverInline(this);
@@ -1476,7 +1488,7 @@ public class exptexParser extends Parser {
 				consume();
 				}
 				}
-				setState(333);
+				setState(335);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -1517,7 +1529,7 @@ public class exptexParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\2\3*\u0151\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4"+
+		"\2\3*\u0153\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4"+
 		"\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20"+
 		"\4\21\t\21\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3"+
 		"\3\3\5\3\63\n\3\3\4\3\4\3\4\3\4\3\4\6\4:\n\4\r\4\16\4;\3\5\3\5\3\5\3\5"+
@@ -1533,37 +1545,37 @@ public class exptexParser extends Parser {
 		"\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\5\13\u00d4\n\13\3\13"+
 		"\3\13\3\13\7\13\u00d9\n\13\f\13\16\13\u00dc\13\13\3\f\3\f\3\f\3\f\3\f"+
 		"\3\f\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3"+
-		"\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\5\r\u0101\n\r\3\r\3"+
-		"\r\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3"+
-		"\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3"+
-		"\16\3\16\5\16\u0122\n\16\3\16\3\16\3\17\3\17\3\17\3\17\3\17\3\17\3\17"+
-		"\3\17\3\17\3\17\3\17\3\17\3\17\5\17\u0133\n\17\3\20\3\20\3\20\3\20\3\20"+
-		"\3\20\3\20\3\20\3\21\7\21\u013e\n\21\f\21\16\21\u0141\13\21\3\21\3\21"+
-		"\3\21\3\21\3\21\3\21\5\21\u0149\n\21\3\21\7\21\u014c\n\21\f\21\16\21\u014f"+
-		"\13\21\3\21\2\22\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \2\n\4\24\24\34"+
-		"\34\4\24\24\34\34\4\24\24\34\34\4\24\24\34\34\4\24\24\34\34\4\24\24\34"+
-		"\34\4\"\"$$\4\"\"$$\u016a\2\"\3\2\2\2\4\62\3\2\2\2\69\3\2\2\2\bL\3\2\2"+
-		"\2\nR\3\2\2\2\fj\3\2\2\2\16\u0080\3\2\2\2\20\u0095\3\2\2\2\22\u00aa\3"+
-		"\2\2\2\24\u00d3\3\2\2\2\26\u00dd\3\2\2\2\30\u0100\3\2\2\2\32\u0121\3\2"+
-		"\2\2\34\u0132\3\2\2\2\36\u0134\3\2\2\2 \u013f\3\2\2\2\"#\3\2\2\2#\3\3"+
-		"\2\2\2$%\7!\2\2%\63\b\3\1\2&\'\7%\2\2\'\63\b\3\1\2()\7&\2\2)\63\b\3\1"+
-		"\2*+\7 \2\2+\63\b\3\1\2,-\7\r\2\2-.\7!\2\2.\63\b\3\1\2/\60\7\20\2\2\60"+
-		"\61\7!\2\2\61\63\b\3\1\2\62$\3\2\2\2\62&\3\2\2\2\62(\3\2\2\2\62*\3\2\2"+
-		"\2\62,\3\2\2\2\62/\3\2\2\2\63\5\3\2\2\2\64\65\7)\2\2\65:\b\4\1\2\66\67"+
-		"\5\b\5\2\678\b\4\1\28:\3\2\2\29\64\3\2\2\29\66\3\2\2\2:;\3\2\2\2;9\3\2"+
-		"\2\2;<\3\2\2\2<\7\3\2\2\2=>\5\30\r\2>?\b\5\1\2?M\3\2\2\2@A\5\32\16\2A"+
-		"B\b\5\1\2BM\3\2\2\2CD\5\34\17\2DE\b\5\1\2EM\3\2\2\2FG\5\36\20\2GH\b\5"+
-		"\1\2HM\3\2\2\2IJ\5\f\7\2JK\b\5\1\2KM\3\2\2\2L=\3\2\2\2L@\3\2\2\2LC\3\2"+
-		"\2\2LF\3\2\2\2LI\3\2\2\2M\t\3\2\2\2NP\5\b\5\2ON\3\2\2\2OP\3\2\2\2PQ\3"+
-		"\2\2\2QS\7)\2\2RO\3\2\2\2RS\3\2\2\2ST\3\2\2\2TU\5\6\4\2Ub\b\6\1\2VW\7"+
-		"$\2\2W[\b\6\1\2XY\5\b\5\2YZ\b\6\1\2Z\\\3\2\2\2[X\3\2\2\2[\\\3\2\2\2\\"+
-		"]\3\2\2\2]^\7)\2\2^_\b\6\1\2_`\5\6\4\2`a\b\6\1\2ac\3\2\2\2bV\3\2\2\2c"+
-		"d\3\2\2\2db\3\2\2\2de\3\2\2\2ef\3\2\2\2fg\b\6\1\2g\13\3\2\2\2hi\7\13\2"+
-		"\2ik\b\7\1\2jh\3\2\2\2jk\3\2\2\2kl\3\2\2\2lm\5\16\b\2m}\b\7\1\2no\7\b"+
-		"\2\2ow\b\7\1\2pq\7\13\2\2qw\b\7\1\2rs\7\37\2\2sw\b\7\1\2tu\7\22\2\2uw"+
-		"\b\7\1\2vn\3\2\2\2vp\3\2\2\2vr\3\2\2\2vt\3\2\2\2wx\3\2\2\2xy\5\16\b\2"+
-		"yz\b\7\1\2z|\3\2\2\2{v\3\2\2\2|\177\3\2\2\2}{\3\2\2\2}~\3\2\2\2~\r\3\2"+
-		"\2\2\177}\3\2\2\2\u0080\u0081\5\20\t\2\u0081\u0092\b\b\1\2\u0082\u0083"+
+		"\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\5\r\u0102\n\r\3"+
+		"\r\3\r\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16"+
+		"\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16"+
+		"\3\16\3\16\3\16\5\16\u0124\n\16\3\16\3\16\3\17\3\17\3\17\3\17\3\17\3\17"+
+		"\3\17\3\17\3\17\3\17\3\17\3\17\3\17\5\17\u0135\n\17\3\20\3\20\3\20\3\20"+
+		"\3\20\3\20\3\20\3\20\3\21\7\21\u0140\n\21\f\21\16\21\u0143\13\21\3\21"+
+		"\3\21\3\21\3\21\3\21\3\21\5\21\u014b\n\21\3\21\7\21\u014e\n\21\f\21\16"+
+		"\21\u0151\13\21\3\21\2\22\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \2\n"+
+		"\4\24\24\34\34\4\24\24\34\34\4\24\24\34\34\4\24\24\34\34\4\24\24\34\34"+
+		"\4\24\24\34\34\4\"\"$$\4\"\"$$\u016c\2\"\3\2\2\2\4\62\3\2\2\2\69\3\2\2"+
+		"\2\bL\3\2\2\2\nR\3\2\2\2\fj\3\2\2\2\16\u0080\3\2\2\2\20\u0095\3\2\2\2"+
+		"\22\u00aa\3\2\2\2\24\u00d3\3\2\2\2\26\u00dd\3\2\2\2\30\u0101\3\2\2\2\32"+
+		"\u0123\3\2\2\2\34\u0134\3\2\2\2\36\u0136\3\2\2\2 \u0141\3\2\2\2\"#\3\2"+
+		"\2\2#\3\3\2\2\2$%\7!\2\2%\63\b\3\1\2&\'\7%\2\2\'\63\b\3\1\2()\7&\2\2)"+
+		"\63\b\3\1\2*+\7 \2\2+\63\b\3\1\2,-\7\r\2\2-.\7!\2\2.\63\b\3\1\2/\60\7"+
+		"\20\2\2\60\61\7!\2\2\61\63\b\3\1\2\62$\3\2\2\2\62&\3\2\2\2\62(\3\2\2\2"+
+		"\62*\3\2\2\2\62,\3\2\2\2\62/\3\2\2\2\63\5\3\2\2\2\64\65\7)\2\2\65:\b\4"+
+		"\1\2\66\67\5\b\5\2\678\b\4\1\28:\3\2\2\29\64\3\2\2\29\66\3\2\2\2:;\3\2"+
+		"\2\2;9\3\2\2\2;<\3\2\2\2<\7\3\2\2\2=>\5\30\r\2>?\b\5\1\2?M\3\2\2\2@A\5"+
+		"\32\16\2AB\b\5\1\2BM\3\2\2\2CD\5\34\17\2DE\b\5\1\2EM\3\2\2\2FG\5\36\20"+
+		"\2GH\b\5\1\2HM\3\2\2\2IJ\5\f\7\2JK\b\5\1\2KM\3\2\2\2L=\3\2\2\2L@\3\2\2"+
+		"\2LC\3\2\2\2LF\3\2\2\2LI\3\2\2\2M\t\3\2\2\2NP\5\b\5\2ON\3\2\2\2OP\3\2"+
+		"\2\2PQ\3\2\2\2QS\7)\2\2RO\3\2\2\2RS\3\2\2\2ST\3\2\2\2TU\5\6\4\2Ub\b\6"+
+		"\1\2VW\7$\2\2W[\b\6\1\2XY\5\b\5\2YZ\b\6\1\2Z\\\3\2\2\2[X\3\2\2\2[\\\3"+
+		"\2\2\2\\]\3\2\2\2]^\7)\2\2^_\b\6\1\2_`\5\6\4\2`a\b\6\1\2ac\3\2\2\2bV\3"+
+		"\2\2\2cd\3\2\2\2db\3\2\2\2de\3\2\2\2ef\3\2\2\2fg\b\6\1\2g\13\3\2\2\2h"+
+		"i\7\13\2\2ik\b\7\1\2jh\3\2\2\2jk\3\2\2\2kl\3\2\2\2lm\5\16\b\2m}\b\7\1"+
+		"\2no\7\b\2\2ow\b\7\1\2pq\7\13\2\2qw\b\7\1\2rs\7\37\2\2sw\b\7\1\2tu\7\22"+
+		"\2\2uw\b\7\1\2vn\3\2\2\2vp\3\2\2\2vr\3\2\2\2vt\3\2\2\2wx\3\2\2\2xy\5\16"+
+		"\b\2yz\b\7\1\2z|\3\2\2\2{v\3\2\2\2|\177\3\2\2\2}{\3\2\2\2}~\3\2\2\2~\r"+
+		"\3\2\2\2\177}\3\2\2\2\u0080\u0081\5\20\t\2\u0081\u0092\b\b\1\2\u0082\u0083"+
 		"\7\n\2\2\u0083\u008c\b\b\1\2\u0084\u0085\7(\2\2\u0085\u008c\b\b\1\2\u0086"+
 		"\u0087\7\'\2\2\u0087\u008c\b\b\1\2\u0088\u0089\7\4\2\2\u0089\u008c\b\b"+
 		"\1\2\u008a\u008c\b\b\1\2\u008b\u0082\3\2\2\2\u008b\u0084\3\2\2\2\u008b"+
@@ -1595,41 +1607,42 @@ public class exptexParser extends Parser {
 		"\3\2\2\2\u00d9\u00dc\3\2\2\2\u00da\u00d8\3\2\2\2\u00da\u00db\3\2\2\2\u00db"+
 		"\25\3\2\2\2\u00dc\u00da\3\2\2\2\u00dd\u00de\5\6\4\2\u00de\u00df\b\f\1"+
 		"\2\u00df\u00e0\7\25\2\2\u00e0\u00e1\5\6\4\2\u00e1\u00e2\b\f\1\2\u00e2"+
-		"\27\3\2\2\2\u00e3\u00e4\7\23\2\2\u00e4\u00e5\5\b\5\2\u00e5\u00e6\b\r\1"+
-		"\2\u00e6\u00e7\t\2\2\2\u00e7\u00e8\5\b\5\2\u00e8\u00e9\b\r\1\2\u00e9\u00ea"+
-		"\7*\2\2\u00ea\u00eb\5\b\5\2\u00eb\u00ec\b\r\1\2\u00ec\u0101\3\2\2\2\u00ed"+
-		"\u00ee\7\23\2\2\u00ee\u00ef\t\3\2\2\u00ef\u00f0\5\b\5\2\u00f0\u00f1\b"+
-		"\r\1\2\u00f1\u00f2\7*\2\2\u00f2\u00f3\5\b\5\2\u00f3\u00f4\b\r\1\2\u00f4"+
-		"\u00f5\7\35\2\2\u00f5\u00f6\5\b\5\2\u00f6\u00f7\b\r\1\2\u00f7\u0101\3"+
-		"\2\2\2\u00f8\u00f9\7\23\2\2\u00f9\u00fa\t\4\2\2\u00fa\u00fb\5\b\5\2\u00fb"+
-		"\u00fc\b\r\1\2\u00fc\u00fd\7\35\2\2\u00fd\u00fe\5\b\5\2\u00fe\u00ff\b"+
-		"\r\1\2\u00ff\u0101\3\2\2\2\u0100\u00e3\3\2\2\2\u0100\u00ed\3\2\2\2\u0100"+
-		"\u00f8\3\2\2\2\u0101\u0102\3\2\2\2\u0102\u0103\b\r\1\2\u0103\31\3\2\2"+
-		"\2\u0104\u0105\7\27\2\2\u0105\u0106\5\b\5\2\u0106\u0107\b\16\1\2\u0107"+
-		"\u0108\t\5\2\2\u0108\u0109\5\b\5\2\u0109\u010a\b\16\1\2\u010a\u010b\7"+
-		"*\2\2\u010b\u010c\5\b\5\2\u010c\u010d\b\16\1\2\u010d\u0122\3\2\2\2\u010e"+
-		"\u010f\7\27\2\2\u010f\u0110\t\6\2\2\u0110\u0111\5\b\5\2\u0111\u0112\b"+
-		"\16\1\2\u0112\u0113\7*\2\2\u0113\u0114\5\b\5\2\u0114\u0115\b\16\1\2\u0115"+
-		"\u0116\7\35\2\2\u0116\u0117\5\b\5\2\u0117\u0118\b\16\1\2\u0118\u0122\3"+
-		"\2\2\2\u0119\u011a\7\27\2\2\u011a\u011b\t\7\2\2\u011b\u011c\5\b\5\2\u011c"+
-		"\u011d\b\16\1\2\u011d\u011e\7\35\2\2\u011e\u011f\5\b\5\2\u011f\u0120\b"+
-		"\16\1\2\u0120\u0122\3\2\2\2\u0121\u0104\3\2\2\2\u0121\u010e\3\2\2\2\u0121"+
-		"\u0119\3\2\2\2\u0122\u0123\3\2\2\2\u0123\u0124\b\16\1\2\u0124\33\3\2\2"+
-		"\2\u0125\u0126\7\33\2\2\u0126\u0127\7\34\2\2\u0127\u0128\5\b\5\2\u0128"+
-		"\u0129\b\17\1\2\u0129\u012a\7\35\2\2\u012a\u012b\5\b\5\2\u012b\u012c\b"+
-		"\17\1\2\u012c\u0133\3\2\2\2\u012d\u012e\7\33\2\2\u012e\u012f\7\35\2\2"+
-		"\u012f\u0130\5\b\5\2\u0130\u0131\b\17\1\2\u0131\u0133\3\2\2\2\u0132\u0125"+
-		"\3\2\2\2\u0132\u012d\3\2\2\2\u0133\35\3\2\2\2\u0134\u0135\7\31\2\2\u0135"+
-		"\u0136\7\32\2\2\u0136\u0137\5\b\5\2\u0137\u0138\b\20\1\2\u0138\u0139\7"+
-		"\35\2\2\u0139\u013a\5\b\5\2\u013a\u013b\b\20\1\2\u013b\37\3\2\2\2\u013c"+
-		"\u013e\t\b\2\2\u013d\u013c\3\2\2\2\u013e\u0141\3\2\2\2\u013f\u013d\3\2"+
-		"\2\2\u013f\u0140\3\2\2\2\u0140\u0148\3\2\2\2\u0141\u013f\3\2\2\2\u0142"+
-		"\u0143\5\n\6\2\u0143\u0144\b\21\1\2\u0144\u0149\3\2\2\2\u0145\u0146\5"+
-		"\6\4\2\u0146\u0147\b\21\1\2\u0147\u0149\3\2\2\2\u0148\u0142\3\2\2\2\u0148"+
-		"\u0145\3\2\2\2\u0149\u014d\3\2\2\2\u014a\u014c\t\t\2\2\u014b\u014a\3\2"+
-		"\2\2\u014c\u014f\3\2\2\2\u014d\u014b\3\2\2\2\u014d\u014e\3\2\2\2\u014e"+
-		"!\3\2\2\2\u014f\u014d\3\2\2\2\33\629;LOR[djv}\u008b\u0092\u00a5\u00a7"+
-		"\u00b0\u00b7\u00d3\u00da\u0100\u0121\u0132\u013f\u0148\u014d";
+		"\27\3\2\2\2\u00e3\u00e4\7\23\2\2\u00e4\u00e5\7\35\2\2\u00e5\u00e6\5\b"+
+		"\5\2\u00e6\u00e7\b\r\1\2\u00e7\u00e8\t\2\2\2\u00e8\u00e9\5\6\4\2\u00e9"+
+		"\u00ea\b\r\1\2\u00ea\u00eb\7*\2\2\u00eb\u00ec\5\6\4\2\u00ec\u00ed\b\r"+
+		"\1\2\u00ed\u0102\3\2\2\2\u00ee\u00ef\7\23\2\2\u00ef\u00f0\t\3\2\2\u00f0"+
+		"\u00f1\5\6\4\2\u00f1\u00f2\b\r\1\2\u00f2\u00f3\7*\2\2\u00f3\u00f4\5\6"+
+		"\4\2\u00f4\u00f5\b\r\1\2\u00f5\u00f6\7\35\2\2\u00f6\u00f7\5\b\5\2\u00f7"+
+		"\u00f8\b\r\1\2\u00f8\u0102\3\2\2\2\u00f9\u00fa\7\23\2\2\u00fa\u00fb\t"+
+		"\4\2\2\u00fb\u00fc\5\6\4\2\u00fc\u00fd\b\r\1\2\u00fd\u00fe\7\35\2\2\u00fe"+
+		"\u00ff\5\b\5\2\u00ff\u0100\b\r\1\2\u0100\u0102\3\2\2\2\u0101\u00e3\3\2"+
+		"\2\2\u0101\u00ee\3\2\2\2\u0101\u00f9\3\2\2\2\u0102\u0103\3\2\2\2\u0103"+
+		"\u0104\b\r\1\2\u0104\31\3\2\2\2\u0105\u0106\7\27\2\2\u0106\u0107\7\35"+
+		"\2\2\u0107\u0108\5\b\5\2\u0108\u0109\b\16\1\2\u0109\u010a\t\5\2\2\u010a"+
+		"\u010b\5\6\4\2\u010b\u010c\b\16\1\2\u010c\u010d\7*\2\2\u010d\u010e\5\6"+
+		"\4\2\u010e\u010f\b\16\1\2\u010f\u0124\3\2\2\2\u0110\u0111\7\27\2\2\u0111"+
+		"\u0112\t\6\2\2\u0112\u0113\5\6\4\2\u0113\u0114\b\16\1\2\u0114\u0115\7"+
+		"*\2\2\u0115\u0116\5\6\4\2\u0116\u0117\b\16\1\2\u0117\u0118\7\35\2\2\u0118"+
+		"\u0119\5\b\5\2\u0119\u011a\b\16\1\2\u011a\u0124\3\2\2\2\u011b\u011c\7"+
+		"\27\2\2\u011c\u011d\t\7\2\2\u011d\u011e\5\6\4\2\u011e\u011f\b\16\1\2\u011f"+
+		"\u0120\7\35\2\2\u0120\u0121\5\b\5\2\u0121\u0122\b\16\1\2\u0122\u0124\3"+
+		"\2\2\2\u0123\u0105\3\2\2\2\u0123\u0110\3\2\2\2\u0123\u011b\3\2\2\2\u0124"+
+		"\u0125\3\2\2\2\u0125\u0126\b\16\1\2\u0126\33\3\2\2\2\u0127\u0128\7\33"+
+		"\2\2\u0128\u0129\7\34\2\2\u0129\u012a\5\6\4\2\u012a\u012b\b\17\1\2\u012b"+
+		"\u012c\7\35\2\2\u012c\u012d\5\b\5\2\u012d\u012e\b\17\1\2\u012e\u0135\3"+
+		"\2\2\2\u012f\u0130\7\33\2\2\u0130\u0131\7\35\2\2\u0131\u0132\5\b\5\2\u0132"+
+		"\u0133\b\17\1\2\u0133\u0135\3\2\2\2\u0134\u0127\3\2\2\2\u0134\u012f\3"+
+		"\2\2\2\u0135\35\3\2\2\2\u0136\u0137\7\31\2\2\u0137\u0138\7\32\2\2\u0138"+
+		"\u0139\5\6\4\2\u0139\u013a\b\20\1\2\u013a\u013b\7\35\2\2\u013b\u013c\5"+
+		"\b\5\2\u013c\u013d\b\20\1\2\u013d\37\3\2\2\2\u013e\u0140\t\b\2\2\u013f"+
+		"\u013e\3\2\2\2\u0140\u0143\3\2\2\2\u0141\u013f\3\2\2\2\u0141\u0142\3\2"+
+		"\2\2\u0142\u014a\3\2\2\2\u0143\u0141\3\2\2\2\u0144\u0145\5\n\6\2\u0145"+
+		"\u0146\b\21\1\2\u0146\u014b\3\2\2\2\u0147\u0148\5\6\4\2\u0148\u0149\b"+
+		"\21\1\2\u0149\u014b\3\2\2\2\u014a\u0144\3\2\2\2\u014a\u0147\3\2\2\2\u014b"+
+		"\u014f\3\2\2\2\u014c\u014e\t\t\2\2\u014d\u014c\3\2\2\2\u014e\u0151\3\2"+
+		"\2\2\u014f\u014d\3\2\2\2\u014f\u0150\3\2\2\2\u0150!\3\2\2\2\u0151\u014f"+
+		"\3\2\2\2\33\629;LOR[djv}\u008b\u0092\u00a5\u00a7\u00b0\u00b7\u00d3\u00da"+
+		"\u0101\u0123\u0134\u0141\u014a\u014f";
 	public static final ATN _ATN =
 		ATNSimulator.deserialize(_serializedATN.toCharArray());
 	static {

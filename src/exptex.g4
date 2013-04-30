@@ -101,14 +101,14 @@ atom returns [Expr value]@init{$value = new Expr();}
     | '{' expr '}'{$value.set('{' + $expr.value.flatten(false) + '}');}
     | ent {$value.inherit($ent.value); };
 choose returns [Expr value] @init{$value = new Expr(); Expr a, b;a=b=null;}: expr{a=$expr.value;} CHOOSE expr{b=$expr.value; $value.atomic(ExpTexUtils.choose(a, b));};
-sum returns [Expr value] @init{$value = new Expr(); Expr a,b,c;a=b=c=null;}: (SUM single_expr{a = $single_expr.value;} (FOR|OVER) single_expr{b = $single_expr.value;} '..' single_expr{c = $single_expr.value;}
-| SUM (FOR | OVER) single_expr{b = $single_expr.value;} '..' single_expr{c = $single_expr.value;} OF single_expr{a = $single_expr.value;}
-| SUM (FOR | OVER) single_expr{b=$single_expr.value;} OF single_expr{a=$single_expr.value;}) {$value.set(ExpTexUtils.bigop("\\sum", a, b, c));};
-prod returns [Expr value] @init{$value = new Expr(); Expr a,b,c;a=b=c=null;}: (PROD single_expr{a = $single_expr.value;} (FOR|OVER) single_expr{b = $single_expr.value;} '..' single_expr{c = $single_expr.value;}
-| PROD (FOR | OVER) single_expr{b = $single_expr.value;} '..' single_expr{c = $single_expr.value;} OF single_expr{a = $single_expr.value;}
-| PROD (FOR | OVER) single_expr{b=$single_expr.value;} OF single_expr{a=$single_expr.value;}) {$value.set(ExpTexUtils.bigop("\\prod", a, b, c));};
+sum returns [Expr value] @init{$value = new Expr(); Expr a,b,c;a=b=c=null;}: (SUM OF single_expr{a = $single_expr.value;} (FOR|OVER) expr{b = $expr.value;} '..' expr{c = $expr.value;}
+| SUM (FOR | OVER) expr{b = $expr.value;} '..' expr{c = $expr.value;} OF single_expr{a = $single_expr.value;}
+| SUM (FOR | OVER) expr{b=$expr.value;} OF single_expr{a=$single_expr.value;}) {$value.set(ExpTexUtils.bigop("\\sum", a, b, c));};
+prod returns [Expr value] @init{$value = new Expr(); Expr a,b,c;a=b=c=null;}: (PROD OF single_expr{a = $single_expr.value;} (FOR|OVER) expr{b = $expr.value;} '..' expr{c = $expr.value;}
+| PROD (FOR | OVER) expr{b = $expr.value;} '..' expr{c = $expr.value;} OF single_expr{a = $single_expr.value;}
+| PROD (FOR | OVER) expr{b=$expr.value;} OF single_expr{a=$single_expr.value;}) {$value.set(ExpTexUtils.bigop("\\prod", a, b, c));};
 probover returns [Expr value] @init{$value = new Expr(); Expr a,b;a=b=null;}:
-PROB OVER single_expr{b = $single_expr.value;} OF single_expr{a = $single_expr.value;$value.atomic(ExpTexUtils.prob(a, b));}
+PROB OVER expr{b = $expr.value;} OF single_expr{a = $single_expr.value;$value.atomic(ExpTexUtils.prob(a, b));}
 | PROB OF single_expr{a=$single_expr.value; $value.atomic(ExpTexUtils.prob(a, null));};
-lim returns [Expr value] @init{$value = new Expr(); Expr a,b;a=b=null;}: LIMIT AS single_expr{b = $single_expr.value;} OF single_expr{a = $single_expr.value; $value.set(ExpTexUtils.bigop("\\lim", a, b, null));};
+lim returns [Expr value] @init{$value = new Expr(); Expr a,b;a=b=null;}: LIMIT AS expr{b = $expr.value;} OF single_expr{a = $single_expr.value; $value.set(ExpTexUtils.bigop("\\lim", a, b, null));};
 start returns [String value, boolean isMath]: (NEWLINE|SPACE)* (align{$value = $align.value; $isMath = true;} | expr{$value = $expr.value.flatten(false); $isMath = false;}) (NEWLINE|SPACE)*;
