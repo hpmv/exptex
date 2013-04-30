@@ -1,0 +1,7 @@
+DOLLAR=3
+THREEDOLLAR=1
+TWODOLLAR=2
+TOKEN=4
+'$'=3
+'$$'=2
+'$$$'=1
