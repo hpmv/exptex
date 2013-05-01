@@ -76,6 +76,7 @@ public class preprocessorParser extends Parser {
 
 	public static class ParseContext extends ParserRuleContext {
 		public String result;
+		public Token DOLLAR;
 		public Token TOKEN;
 		public List<TerminalNode> DOLLAR() { return getTokens(preprocessorParser.DOLLAR); }
 		public List<TerminalNode> THREEDOLLAR() { return getTokens(preprocessorParser.THREEDOLLAR); }
@@ -127,11 +128,21 @@ public class preprocessorParser extends Parser {
 				switch (_input.LA(1)) {
 				case DOLLAR:
 					{
-					setState(6); match(DOLLAR);
+					setState(6); ((ParseContext)_localctx).DOLLAR = match(DOLLAR);
 
 					             if (mode) 
 					             {
-					                sb.append(ExpTex.transform(buffer.toString(), header));
+					                boolean[] err = new boolean[] {false};
+					                exptexParser.StartContext con = ExpTex.transform(buffer.toString(), err);
+					                String v = con.value;
+					                String t;
+							if (con.isMath) {
+								t= v;
+							} else {
+								t= header + v + header;
+							}
+					                sb.append(t);
+					                if (err[0]) {System.err.println("Error happened at line: "+((ParseContext)_localctx).DOLLAR.getLine());}
 					                buffer = new StringBuilder();
 					                mode = false;
 					                } else
@@ -144,7 +155,17 @@ public class preprocessorParser extends Parser {
 					setState(8); match(TWODOLLAR);
 					if (mode) 
 					             {
-					                sb.append(ExpTex.transform(buffer.toString(), header));
+					                boolean[] err = new boolean[] {false};
+					                exptexParser.StartContext con = ExpTex.transform(buffer.toString(), err);
+					                String v = con.value;
+					                String t;
+							if (con.isMath) {
+								t= v;
+							} else {
+								t= header + v + header;
+							}
+					                sb.append(t);
+					                if (err[0]) {System.err.println("Error happened at line: "+((ParseContext)_localctx).DOLLAR.getLine());}
 					                buffer = new StringBuilder();
 					                mode = false;
 					                } else

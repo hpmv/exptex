@@ -51,6 +51,9 @@ public class exptexBaseListener implements exptexListener {
 	@Override public void enterChoose(exptexParser.ChooseContext ctx) { }
 	@Override public void exitChoose(exptexParser.ChooseContext ctx) { }
 
+	@Override public void enterMath_symbol(exptexParser.Math_symbolContext ctx) { }
+	@Override public void exitMath_symbol(exptexParser.Math_symbolContext ctx) { }
+
 	@Override public void enterProd(exptexParser.ProdContext ctx) { }
 	@Override public void exitProd(exptexParser.ProdContext ctx) { }
 

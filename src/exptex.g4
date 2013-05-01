@@ -18,6 +18,9 @@ OVER: 'over';
 OF: 'of';
 MOD: 'mod';
 XOR: 'xor';
+IN: 'in';
+AND: 'and';
+OR: 'or';
 
 FUNC: ':' [a-zA-Z]+
     | 'cos' | 'sin' | 'tan' | 'log' | 'lg' | 'ln' | 'Pr' | 'abs';
@@ -35,7 +38,7 @@ MATH_SYMBOL: '....' |'...' | '==' | '<=>' |  '->' | '>' | '<' | '=>' | '=' | '<=
 DOT_DOT: '..';
 
 lol:;
-
+math_symbol: MATH_SYMBOL | IN;
 ent returns [Expr value] @init{$value = new Expr();}
     : ID {$value.set(ExpTexUtils.id($ID.text));} 
     | NUM {$value.atomic($NUM.text);}
@@ -46,12 +49,12 @@ ent returns [Expr value] @init{$value = new Expr();}
 
 expr returns [Expr value]
 @init{$value = new Expr(); boolean first = true;boolean one = true;}
-    :(MATH_SYMBOL {$value.append(ExpTexUtils.symbolToLaTeX($MATH_SYMBOL.text)); first = false; one = false;}
+    :(math_symbol {$value.append(ExpTexUtils.symbolToLaTeX($math_symbol.text)); first = false; one = false;}
      |single_expr {if (first)
                    { $value.inherit($single_expr.value); first = false;}
                    else
                    { if (one) { $value.set($value.flatten(false)); }
-                     $value.append($single_expr.value.flatten(false)); 
+                     $value.append($single_expr.value); 
                      one = false;}
                    })+;
 
@@ -67,48 +70,52 @@ align returns [String value]
 @init{StringBuilder sb = new StringBuilder(); 
       sb.append("\\begin{align*}\n");
       }
-    : (single_expr? MATH_SYMBOL)? expr {if ($ctx.single_expr!=null) sb.append($single_expr.value.flatten(true));if ($MATH_SYMBOL != null) sb.append(ExpTexUtils.symbolToLaTeX($MATH_SYMBOL.text));sb.append("{}& ").append($expr.value.flatten(true));}
-      (NEWLINE{sb.append("\\\\\n");} (single_expr{sb.append($single_expr.value.flatten(true));})? MATH_SYMBOL{sb.append(ExpTexUtils.symbolToLaTeX($MATH_SYMBOL.text));} expr {sb.append("{}& ").append($expr.value.flatten(true));})+
+    : (single_expr? MATH_SYMBOL)? expr {if ($ctx.single_expr!=null) sb.append($single_expr.value.flatten(true));
+                                        if ($MATH_SYMBOL != null) sb.append(ExpTexUtils.symbolToLaTeX($MATH_SYMBOL.text));
+                                        sb.append("{}& ").append($expr.value.flatten(true));}
+      (NEWLINE{sb.append("\\\\\n");} (single_expr{sb.append($single_expr.value.flatten(true));})? 
+       MATH_SYMBOL{sb.append(ExpTexUtils.symbolToLaTeX($MATH_SYMBOL.text));}
+       expr {sb.append("{}& ").append($expr.value.flatten(true));})+
       {$value = sb.toString()+"\\end{align*}";};
 
 addexpr returns [Expr value]
 @init{$value = new Expr(); boolean first = true; char c;}
     : ('-' {$value.append("-"); first = false;})?
-      multexpr {if (first) $value.inherit($multexpr.value); else $value.append($multexpr.value.flatten(false));}
-      (('+' {c='+';}|'-' {c='-';} | XOR {c='x';} | '|'{c='|';}) 
-            multexpr {$value.composite(ExpTexUtils.opText(c, $value, $multexpr.value));})*;
+      multexpr {if (first) $value.inherit($multexpr.value); else $value.append($multexpr.value);}
+      (('+' {c='+';}|'-' {c='-';} | XOR {c='x';} | '|'{c='|';} | AND {c='a';} | OR {c='o';}) 
+            multexpr {$value=ExpTexUtils.opExpr(c, $value, $multexpr.value);})*;
 
 multexpr returns [Expr value]
 @init{$value = new Expr(); char c; boolean first = true;}
     : term {$value.inherit($term.value);} 
       (('*'{c='*';}|'/'{c='/';}|'//'{c='\\';}|'%'{c='%';}|{c=' ';}) 
-            term {$value.composite(ExpTexUtils.opText(c, $value, $term.value));})*;
+            term {$value = ExpTexUtils.opExpr(c, $value, $term.value);})*;
 
 term returns [Expr value] @init{$value = new Expr();}
-    : term '[' expr ']' {$value = new Expr(); $value.set('{' + _prevctx.value.flatten(false) + ExpTexUtils.sqBracket($expr.value.flatten(true)) + '}');}
-    | term '(' expr ')' {$value = new Expr(); $value.set('{' + _prevctx.value.flatten(false) + ExpTexUtils.bracket($expr.value.flatten(true)) + '}');}
+    : term '[' expr ']' {$value = new Expr();$value.inherit(_prevctx.value); $value.append(ExpTexUtils.enclose($expr.value, "[", "]"));}
+    | term '(' expr ')' {$value = new Expr();$value.inherit(_prevctx.value); $value.append(ExpTexUtils.enclose($expr.value, "(", ")"));}
     | power {$value.inherit($power.value);};
 
 power returns [Expr value] @init{$value = new Expr(); char c;}
     : atom{$value.inherit($atom.value);}
-      (('^'{c='^';}|'_'{c='_';}) atom{$value.composite(ExpTexUtils.opText(c, $value, $atom.value));})*;
+      (('^'{c='^';}|'_'{c='_';}) atom{$value=ExpTexUtils.opExpr(c, $value, $atom.value);})*;
 
 atom returns [Expr value]@init{$value = new Expr();}
     : '(' choose ')' {$value.inherit($choose.value); }
     | '(' MOD expr ')' {$value.atomic("\\pmod{"+$expr.value.flatten(true)+"}");}
     | '(' expr ')' {$value.compositeBrackets($expr.value);}
     | atom '\'' {$value = new Expr();$value.set(_prevctx.value.flatten(false) + '\'');}
-    | '{' expr '}'{$value.set('{' + $expr.value.flatten(false) + '}');}
+    | '{' expr '}'{$value = ExpTexUtils.enclose($expr.value, "\\{", "\\}");}
     | ent {$value.inherit($ent.value); };
-choose returns [Expr value] @init{$value = new Expr(); Expr a, b;a=b=null;}: expr{a=$expr.value;} CHOOSE expr{b=$expr.value; $value.atomic(ExpTexUtils.choose(a, b));};
+choose returns [Expr value] @init{$value = new Expr(); Expr a, b;a=b=null;}: expr{a=$expr.value;} CHOOSE expr{b=$expr.value; $value=ExpTexUtils.choose(a, b);};
 sum returns [Expr value] @init{$value = new Expr(); Expr a,b,c;a=b=c=null;}: (SUM OF single_expr{a = $single_expr.value;} (FOR|OVER) expr{b = $expr.value;} '..' expr{c = $expr.value;}
 | SUM (FOR | OVER) expr{b = $expr.value;} '..' expr{c = $expr.value;} OF single_expr{a = $single_expr.value;}
-| SUM (FOR | OVER) expr{b=$expr.value;} OF single_expr{a=$single_expr.value;}) {$value.set(ExpTexUtils.bigop("\\sum", a, b, c));};
+| SUM (FOR | OVER) expr{b=$expr.value;} OF single_expr{a=$single_expr.value;}) {$value=ExpTexUtils.bigop("\\sum", a, b, c);};
 prod returns [Expr value] @init{$value = new Expr(); Expr a,b,c;a=b=c=null;}: (PROD OF single_expr{a = $single_expr.value;} (FOR|OVER) expr{b = $expr.value;} '..' expr{c = $expr.value;}
 | PROD (FOR | OVER) expr{b = $expr.value;} '..' expr{c = $expr.value;} OF single_expr{a = $single_expr.value;}
-| PROD (FOR | OVER) expr{b=$expr.value;} OF single_expr{a=$single_expr.value;}) {$value.set(ExpTexUtils.bigop("\\prod", a, b, c));};
+| PROD (FOR | OVER) expr{b=$expr.value;} OF single_expr{a=$single_expr.value;}) {$value=ExpTexUtils.bigop("\\prod", a, b, c);};
 probover returns [Expr value] @init{$value = new Expr(); Expr a,b;a=b=null;}:
-PROB OVER expr{b = $expr.value;} OF single_expr{a = $single_expr.value;$value.atomic(ExpTexUtils.prob(a, b));}
-| PROB OF single_expr{a=$single_expr.value; $value.atomic(ExpTexUtils.prob(a, null));};
-lim returns [Expr value] @init{$value = new Expr(); Expr a,b;a=b=null;}: LIMIT AS expr{b = $expr.value;} OF single_expr{a = $single_expr.value; $value.set(ExpTexUtils.bigop("\\lim", a, b, null));};
+PROB OVER expr{b = $expr.value;} OF single_expr{a = $single_expr.value;$value=ExpTexUtils.prob(a, b);}
+| PROB OF single_expr{a=$single_expr.value; $value=ExpTexUtils.prob(a, null);};
+lim returns [Expr value] @init{$value = new Expr(); Expr a,b;a=b=null;}: LIMIT AS expr{b = $expr.value;} OF single_expr{a = $single_expr.value; $value=ExpTexUtils.bigop("\\lim", a, b, null);};
 start returns [String value, boolean isMath]: (NEWLINE|SPACE)* (align{$value = $align.value; $isMath = true;} | expr{$value = $expr.value.flatten(false); $isMath = false;}) (NEWLINE|SPACE)*;

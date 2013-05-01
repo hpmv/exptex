@@ -48,6 +48,9 @@ public interface exptexListener extends ParseTreeListener {
 	void enterChoose(exptexParser.ChooseContext ctx);
 	void exitChoose(exptexParser.ChooseContext ctx);
 
+	void enterMath_symbol(exptexParser.Math_symbolContext ctx);
+	void exitMath_symbol(exptexParser.Math_symbolContext ctx);
+
 	void enterProd(exptexParser.ProdContext ctx);
 	void exitProd(exptexParser.ProdContext ctx);
 }

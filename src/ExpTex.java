@@ -3,6 +3,7 @@ import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.UnbufferedCharStream;
+import org.antlr.v4.runtime.tree.ErrorNode;
 
 import java.io.*;
 
@@ -15,14 +16,15 @@ public class ExpTex {
 		out.close();
 	}
 
-	public static Object transform(String s, String header) {
+	public static exptexParser.StartContext transform(String s, final boolean[] error) {
 		exptexParser parser = new exptexParser(new BufferedTokenStream(new exptexLexer(new ANTLRInputStream(s))));
-		exptexParser.StartContext con = parser.start();
-		String v = con.value;
-		if (con.isMath) {
-			return v;
-		} else {
-			return header + v + header;
-		}
+		parser.addParseListener(new exptexBaseListener(){
+			@Override
+			public void visitErrorNode(ErrorNode node) {
+				super.visitErrorNode(node);
+				error[0] = true;
+			}
+		});
+		return parser.start();
 	}
 }

@@ -9,7 +9,8 @@ public class ExpTexUtils {
 	private static Map<String, String> idSubstitute = new HashMap<String, String>();
 	static {
 		String[] stlm =
-				"= = == @equiv , , . . > > < < <= @leq >= @geq ... @ldots .... @cdots => @implies <=> @Longleftrightarrow -> @rightarrow : : | |"
+				("= = == @equiv , , . . > > < < <= @leq >= @geq ... @ldots .... @cdots => @implies <=> @Longleftrightarrow -> @rightarrow : : | | " +
+						"in @in")
 				.replace('@', '\\').split(" ");
 		for(int i=0;i<stlm.length/2;i++) {
 			symbolToLaTeXMap.put(stlm[i*2], stlm[i*2+1]);
@@ -31,62 +32,77 @@ public class ExpTexUtils {
 	public static String symbolToLaTeX(String symbol) {
 		return symbolToLaTeXMap.get(symbol) + " ";
 	}
-	public static String bigop(String op, Expr a, Expr b, Expr c) {
+	public static Expr bigop(String op, Expr a, Expr b, Expr c) {
+		boolean tall = false;
 		StringBuilder result = new StringBuilder();
 		result.append("{");
 		result.append(op);
 		if (b != null) {
 			result.append("_{"+b.flatten(true)+"}");
+			tall =true;
 		}
 		if (c!=null) {
 			result.append("^{"+c.flatten(true)+"}");
+			tall = true;
 		}
 		result.append(a.flatten(true));
+		if (a.tall) tall = true;
 		result.append("}");
-		return result.toString();
+		Expr e = new Expr().set(result.toString());
+		e.tall = tall;
+		return e;
 	}
 
-	public static String bracket(String text) {
-		return "\\left("+text+"\\right)";
+	public static String bracket(String text, boolean tall) {
+		if (tall) {
+			return "\\left("+text+"\\right)";
+		}
+		return '('+text+')';
 	}
 	public static String sqBracket(String text) {
 		return "\\left["+text+"\\right]";
 	}
-	public static String opText(char op, Expr a, Expr b) {
+	public static Expr opExpr(char op, Expr a, Expr b) {
 		switch (op) {
+			case 'a':
+				return new Expr().append(a).append("\\wedge").append(b);
+			case 'o':
+				return new Expr().append(a).append("\\vee").append(b);
 			case '+':
-				return a.flatten(false) + "+"+b.flatten(false);
+				return new Expr().append(a).append("+").append(b);
 			case '-':
-				return a.flatten(false) + "- "+b.flatten(false);
+				return new Expr().append(a).append("-").append(b);
 			case 'x':
-				return a.flatten(false) + "\\oplus "+b.flatten(false);
+				return new Expr().append(a).append("\\oplus ").append(b);
 			case '|':
-				return a.flatten(false) + " | "+b.flatten(false);
+				return new Expr().append(a).append(" | ").append(b);
 			case ' ':
-				return a.flatten(false) + " "+b.flatten(false);
+				return new Expr().append(a).append(" ").append(b);
 			case '*':
-				return a.flatten(false) + "\\cdot "+b.flatten(false);
+				return new Expr().append(a).append("\\cdot ").append(b);
 			case '/':
-				return "\\frac{"+a.flatten(true)+"}{"+b.flatten(true)+"}";
+				return new Expr().append("\\frac{").appendAtomic(a).append("}{").appendAtomic(b).append("}").tall();
 			case '\\':
-				return a.flatten(false) + "/"+b.flatten(false);
+				return new Expr().append(a).append("/").append(b);
 			case '^':
-				return a.flatten(false) + "^"+brace(b.flatten(true));
+				return new Expr().append(a).append("^{").appendAtomic(b).append("}");
 			case '_':
-				return a.flatten(false) + "_"+brace(b.flatten(true));
+				return new Expr().append(a).append("_{").appendAtomic(b).append("}");
 			case '%':
-				return a.flatten(false)+"\\bmod{"+b.flatten(false)+"}";
+				return new Expr().append(a).append("\\bmod{").append(b).append("}");
 			default:
-				return "UNRECOGNIZED OP: "+op;
+				return null;
 		}
 	}
 
-	private static String brace(String s) {
-		return "{"+s+"}";
+	public static Expr enclose(Expr e, String left, String right) {
+		String begin = e.tall?"\\left"+left:left;
+		String end = e.tall?"\\right"+right:right;
+		return new Expr().append(begin).appendAtomic(e).append(end).atomic();
 	}
 
-	public static String choose(Expr a, Expr b) {
-		return bracket("\\begin{array}{c}"+a.flatten(true)+"\\\\"+b.flatten(true)+"\\end{array}");
+	public static Expr choose(Expr a, Expr b) {
+		return new Expr().atomic(bracket("\\begin{array}{c}"+a.flatten(true)+"\\\\"+b.flatten(true)+"\\end{array}", true)).tall();
 	}
 
 	public static String func(String s) {
@@ -96,15 +112,20 @@ public class ExpTexUtils {
 		return "\\mathrm{"+s+"}";
 	}
 
-	public static String prob(Expr a, Expr b) {
+	public static Expr prob(Expr a, Expr b) {
+		boolean tall = false;
 		StringBuilder result = new StringBuilder();
 		result.append("{");
 		result.append("\\Pr");
 		if (b != null) {
+			tall = true;
 			result.append("_{"+b.flatten(true)+"}");
 		}
-		result.append(sqBracket(a.flatten(true)));
+		result.append(enclose(a, "[", "]").flatten(true));
+		if (a.tall) tall = true;
 		result.append("}");
-		return result.toString();
+		Expr e = new Expr().atomic(result.toString());
+		e.tall = tall;
+		return e;
 	}
 }
