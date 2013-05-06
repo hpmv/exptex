@@ -1,4 +1,5 @@
-// Generated from preprocessor.g4 by ANTLR 4.0
+// Generated from subsc.g4 by ANTLR 4.x
+package exptex;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
@@ -9,32 +10,32 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
-public class preprocessorLexer extends Lexer {
+public class subscLexer extends Lexer {
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		THREEDOLLAR=1, TWODOLLAR=2, DOLLAR=3, TOKEN=4;
+		ID=1, NUM=2;
 	public static String[] modeNames = {
 		"DEFAULT_MODE"
 	};
 
 	public static final String[] tokenNames = {
 		"<INVALID>",
-		"'$$$'", "'$$'", "'$'", "TOKEN"
+		"ID", "NUM"
 	};
 	public static final String[] ruleNames = {
-		"THREEDOLLAR", "TWODOLLAR", "DOLLAR", "TOKEN"
+		"ID", "NUM"
 	};
 
 
-	public preprocessorLexer(CharStream input) {
+	public subscLexer(CharStream input) {
 		super(input);
 		_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 
 	@Override
-	public String getGrammarFileName() { return "preprocessor.g4"; }
+	public String getGrammarFileName() { return "subsc.g4"; }
 
 	@Override
 	public String[] getTokenNames() { return tokenNames; }
@@ -49,15 +50,18 @@ public class preprocessorLexer extends Lexer {
 	public ATN getATN() { return _ATN; }
 
 	public static final String _serializedATN =
-		"\2\4\6\26\b\1\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\3\2\3\2\3\2\3\2\3\3\3\3"+
-		"\3\3\3\4\3\4\3\5\3\5\2\6\3\3\1\5\4\1\7\5\1\t\6\1\3\2\3\3\2\0\25\2\3\3"+
-		"\2\2\2\2\5\3\2\2\2\2\7\3\2\2\2\2\t\3\2\2\2\3\13\3\2\2\2\5\17\3\2\2\2\7"+
-		"\22\3\2\2\2\t\24\3\2\2\2\13\f\7&\2\2\f\r\7&\2\2\r\16\7&\2\2\16\4\3\2\2"+
-		"\2\17\20\7&\2\2\20\21\7&\2\2\21\6\3\2\2\2\22\23\7&\2\2\23\b\3\2\2\2\24"+
-		"\25\t\2\2\2\25\n\3\2\2\2\3\2";
+		"\3\u2b54\u93c1\u83e8\ua15a\u4fd9\u885b\u46d8\u065e\2\4\21\b\1\4\2\t\2"+
+		"\4\3\t\3\3\2\6\2\t\n\2\r\2\16\2\n\3\3\6\3\16\n\3\r\3\16\3\17\2\4\3\3\1"+
+		"\5\4\1\3\2\4\4C\\c|\3\62;\22\2\3\3\2\2\2\2\5\3\2\2\2\3\b\3\2\2\2\5\r\3"+
+		"\2\2\2\7\t\t\2\2\2\b\7\3\2\2\2\t\n\3\2\2\2\n\b\3\2\2\2\n\13\3\2\2\2\13"+
+		"\4\3\2\2\2\f\16\t\3\2\2\r\f\3\2\2\2\16\17\3\2\2\2\17\r\3\2\2\2\17\20\3"+
+		"\2\2\2\20\6\3\2\2\2\5\2\n\17";
 	public static final ATN _ATN =
 		ATNSimulator.deserialize(_serializedATN.toCharArray());
 	static {
 		_decisionToDFA = new DFA[_ATN.getNumberOfDecisions()];
+		for (int i = 0; i < _ATN.getNumberOfDecisions(); i++) {
+			_decisionToDFA[i] = new DFA(_ATN.getDecisionState(i), i);
+		}
 	}
 }

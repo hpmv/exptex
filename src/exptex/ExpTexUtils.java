@@ -1,3 +1,5 @@
+package exptex;
+
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BufferedTokenStream;
 
@@ -10,7 +12,7 @@ public class ExpTexUtils {
 	static {
 		String[] stlm =
 				("= = == @equiv , , . . > > < < <= @leq >= @geq ... @ldots .... @cdots => @implies <=> @Longleftrightarrow -> @rightarrow : : | | " +
-						"in @in")
+						"in @in and @wedge or @vee <-- @leftarrow")
 				.replace('@', '\\').split(" ");
 		for(int i=0;i<stlm.length/2;i++) {
 			symbolToLaTeXMap.put(stlm[i*2], stlm[i*2+1]);
@@ -18,8 +20,13 @@ public class ExpTexUtils {
 		String[] alphas =
 				"alpha beta gamma delta epsilon sigma Alpha Beta Gamma Delta Epsilon Sigma".split(" ");
 		for(String alpha : alphas) {
-			idSubstitute.put(alpha, "\\"+alpha);
+			idSubstitute.put(alpha, "\\"+alpha+" ");
 		}
+	}
+
+	public static <T> T coalesce(T ...items) {
+		for(T i : items) if(i != null) return i;
+		return null;
 	}
 
 	public static String id(String i) {
@@ -30,7 +37,11 @@ public class ExpTexUtils {
 	}
 
 	public static String symbolToLaTeX(String symbol) {
-		return symbolToLaTeXMap.get(symbol) + " ";
+		String result = symbolToLaTeXMap.get(symbol);
+		if (result.startsWith("\\")) {
+			result+=' ';
+		}
+		return result;
 	}
 	public static Expr bigop(String op, Expr a, Expr b, Expr c) {
 		boolean tall = false;
@@ -62,33 +73,33 @@ public class ExpTexUtils {
 	public static String sqBracket(String text) {
 		return "\\left["+text+"\\right]";
 	}
-	public static Expr opExpr(char op, Expr a, Expr b) {
+	public static Expr opExpr(String op, Expr a, Expr b) {
 		switch (op) {
-			case 'a':
+			case "and":
 				return new Expr().append(a).append("\\wedge").append(b);
-			case 'o':
+			case "or":
 				return new Expr().append(a).append("\\vee").append(b);
-			case '+':
+			case "+":
 				return new Expr().append(a).append("+").append(b);
-			case '-':
+			case "-":
 				return new Expr().append(a).append("-").append(b);
-			case 'x':
+			case "xor":
 				return new Expr().append(a).append("\\oplus ").append(b);
-			case '|':
+			case "|":
 				return new Expr().append(a).append(" | ").append(b);
-			case ' ':
-				return new Expr().append(a).append(" ").append(b);
-			case '*':
+			case " ":
+				return new Expr().append(a).append("").append(b);
+			case "*":
 				return new Expr().append(a).append("\\cdot ").append(b);
-			case '/':
+			case "/":
 				return new Expr().append("\\frac{").appendAtomic(a).append("}{").appendAtomic(b).append("}").tall();
-			case '\\':
+			case "//":
 				return new Expr().append(a).append("/").append(b);
-			case '^':
+			case "^":
 				return new Expr().append(a).append("^{").appendAtomic(b).append("}");
-			case '_':
+			case "_":
 				return new Expr().append(a).append("_{").appendAtomic(b).append("}");
-			case '%':
+			case "%":
 				return new Expr().append(a).append("\\bmod{").append(b).append("}");
 			default:
 				return null;

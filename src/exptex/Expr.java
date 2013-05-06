@@ -1,3 +1,5 @@
+package exptex;
+
 public class Expr {
 	public String value;
 	public boolean atomic;

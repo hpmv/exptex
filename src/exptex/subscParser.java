@@ -1,4 +1,5 @@
-// Generated from subsc.g4 by ANTLR 4.0
+// Generated from subsc.g4 by ANTLR 4.x
+package exptex;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -146,14 +147,18 @@ public class subscParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\2\3\4\25\4\2\t\2\4\3\t\3\3\2\3\2\3\3\3\3\3\3\3\3\5\3\r\n\3\6\3\17\n\3"+
-		"\r\3\16\3\20\3\3\3\3\3\3\2\4\2\4\2\2\24\2\6\3\2\2\2\4\16\3\2\2\2\6\7\3"+
-		"\2\2\2\7\3\3\2\2\2\b\t\7\3\2\2\t\f\b\3\1\2\n\13\7\4\2\2\13\r\b\3\1\2\f"+
-		"\n\3\2\2\2\f\r\3\2\2\2\r\17\3\2\2\2\16\b\3\2\2\2\17\20\3\2\2\2\20\16\3"+
-		"\2\2\2\20\21\3\2\2\2\21\22\3\2\2\2\22\23\b\3\1\2\23\5\3\2\2\2\4\f\20";
+		"\3\u2b54\u93c1\u83e8\ua15a\u4fd9\u885b\u46d8\u065e\3\4\25\4\2\t\2\4\3"+
+		"\t\3\3\2\3\2\3\3\3\3\3\3\3\3\5\3\r\n\3\6\3\17\n\3\r\3\16\3\20\3\3\3\3"+
+		"\3\3\2\4\2\4\2\2\24\2\6\3\2\2\2\4\16\3\2\2\2\6\7\3\2\2\2\7\3\3\2\2\2\b"+
+		"\t\7\3\2\2\t\f\b\3\1\2\n\13\7\4\2\2\13\r\b\3\1\2\f\n\3\2\2\2\f\r\3\2\2"+
+		"\2\r\17\3\2\2\2\16\b\3\2\2\2\17\20\3\2\2\2\20\16\3\2\2\2\20\21\3\2\2\2"+
+		"\21\22\3\2\2\2\22\23\b\3\1\2\23\5\3\2\2\2\4\f\20";
 	public static final ATN _ATN =
 		ATNSimulator.deserialize(_serializedATN.toCharArray());
 	static {
 		_decisionToDFA = new DFA[_ATN.getNumberOfDecisions()];
+		for (int i = 0; i < _ATN.getNumberOfDecisions(); i++) {
+			_decisionToDFA[i] = new DFA(_ATN.getDecisionState(i), i);
+		}
 	}
 }

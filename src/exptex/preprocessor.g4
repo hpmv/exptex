@@ -18,17 +18,16 @@ parse returns [String result] @init{StringBuilder sb = new StringBuilder();
     (DOLLAR {
              if (mode) 
              {
-                boolean[] err = new boolean[] {false};
-                exptexParser.StartContext con = ExpTex.transform(buffer.toString(), err);
-                String v = con.value;
+                boolean[] res = new boolean[] {false,false};
+                String v = exptex.ExpTex2.transform(buffer.toString(), res);
                 String t;
-		if (con.isMath) {
+		if (res[0]) {
 			t= v;
 		} else {
 			t= header + v + header;
 		}
                 sb.append(t);
-                if (err[0]) {System.err.println("Error happened at line: "+$DOLLAR.getLine());}
+                if (res[1]) {System.err.println("Error happened at line: "+$DOLLAR.getLine());}
                 buffer = new StringBuilder();
                 mode = false;
                 } else
@@ -36,17 +35,16 @@ parse returns [String result] @init{StringBuilder sb = new StringBuilder();
              }
     | TWODOLLAR {if (mode) 
              {
-                boolean[] err = new boolean[] {false};
-                exptexParser.StartContext con = ExpTex.transform(buffer.toString(), err);
-                String v = con.value;
+                boolean[] res = new boolean[] {false,false};
+                String v = exptex.ExpTex2.transform(buffer.toString(), res);
                 String t;
-		if (con.isMath) {
+		if (res[0]) {
 			t= v;
 		} else {
 			t= header + v + header;
 		}
                 sb.append(t);
-                if (err[0]) {System.err.println("Error happened at line: "+$DOLLAR.getLine());}
+                if (res[1]) {System.err.println("Error happened at line: "+$DOLLAR.getLine());}
                 buffer = new StringBuilder();
                 mode = false;
                 } else
