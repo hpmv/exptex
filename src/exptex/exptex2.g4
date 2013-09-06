@@ -33,10 +33,10 @@ STRING : '"' ( '\\"' | . )*? '"' ;
 DIVDIV: '//';
 DIV: '/';
 
-MATH_SYMBOL: '....' |'...' | '==' | '<=>' |  '->' | '>' | '<' | '=>' | '=' | '<=' | '>=' | '.' | ',' | AND | OR | '<--';
+MATH_SYMBOL: '....' |'...' | '==' | '<=>' |  '->' | '>' | '<' | '=>' | '=' | '<=' | '>=' | '.' | ',' | '<--' | ':';
 DOT_DOT: '..';
 
-math_symbol: MATH_SYMBOL | IN;
+math_symbol: MATH_SYMBOL | AND | OR | IN;
 
 entity: ID          #entity_id
       | NUM         #entity_num

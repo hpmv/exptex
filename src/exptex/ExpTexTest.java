@@ -1,7 +1,5 @@
 package exptex;
 
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.BufferedTokenStream;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
@@ -126,5 +124,10 @@ public class ExpTexTest {
 				"={}& \\mathsf{Dec}'(g^{h(\\mathsf{ID}_{A}\\cdot \\mathsf{ID}_{B})},\\mathsf{Enc}'(g^{h(\\mathsf{ID}_{A}\\cdot \\mathsf{ID}_{B})},m))\\\\\n" +
 				"={}& m,\\\\\n" +
 				"\\end{align*}");
+	}
+
+	@Test
+	public void testAndOr() {
+		test("a and b", "a\\wedge b");
 	}
 }

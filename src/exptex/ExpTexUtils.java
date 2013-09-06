@@ -3,35 +3,50 @@ package exptex;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BufferedTokenStream;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.InputStream;
+import java.util.*;
 
 public class ExpTexUtils {
-	private static Map<String, String> symbolToLaTeXMap = new HashMap<String, String>();
+	private static Map<String, String> symbolToLaTeXMap = readMapFromFile("symbols.dat");
 	private static Map<String, String> idSubstitute = new HashMap<String, String>();
+
 	static {
-		String[] stlm =
-				("= = == @equiv , , . . > > < < <= @leq >= @geq ... @ldots .... @cdots => @implies <=> @Longleftrightarrow -> @rightarrow : : | | " +
-						"in @in and @wedge or @vee <-- @leftarrow")
-				.replace('@', '\\').split(" ");
-		for(int i=0;i<stlm.length/2;i++) {
-			symbolToLaTeXMap.put(stlm[i*2], stlm[i*2+1]);
-		}
-		String[] alphas =
-				"alpha beta gamma delta epsilon sigma Alpha Beta Gamma Delta Epsilon Sigma".split(" ");
-		for(String alpha : alphas) {
-			idSubstitute.put(alpha, "\\"+alpha+" ");
+		String[] escapes = readListFromFile("escapes.dat");
+		for (String escape : escapes) {
+			idSubstitute.put(escape, "\\" + escape + " ");
 		}
 	}
 
-	public static <T> T coalesce(T ...items) {
-		for(T i : items) if(i != null) return i;
+	private static String[] readListFromFile(String file) {
+		InputStream stream = ExpTexUtils.class.getClassLoader().getResourceAsStream("exptex/" + file);
+		Scanner scanner = new Scanner(stream);
+		List<String> things = new ArrayList<>();
+		while(scanner.hasNextLine()) {
+			String line = scanner.nextLine();
+			things.add(line);
+		}
+		return things.toArray(new String[things.size()]);
+	}
+	private static Map<String, String> readMapFromFile(String file) {
+		InputStream stream = ExpTexUtils.class.getClassLoader().getResourceAsStream("exptex/" + file);
+		Scanner scanner = new Scanner(stream);
+		Map<String, String> things = new HashMap<String, String>();
+		while(scanner.hasNextLine()) {
+			String[] line = scanner.nextLine().split(" ");
+			things.put(line[0], line[1]);
+		}
+		return things;
+	}
+
+	@SafeVarargs
+	public static <T> T coalesce(T... items) {
+		for (T i : items) if (i != null) return i;
 		return null;
 	}
 
 	public static String id(String i) {
 		String sub = idSubstitute.get(i);
-		if (sub!=null) return sub;
+		if (sub != null) return sub;
 		subscParser parser = new subscParser(new BufferedTokenStream(new subscLexer(new ANTLRInputStream(i))));
 		return parser.start().value;
 	}
@@ -39,21 +54,22 @@ public class ExpTexUtils {
 	public static String symbolToLaTeX(String symbol) {
 		String result = symbolToLaTeXMap.get(symbol);
 		if (result.startsWith("\\")) {
-			result+=' ';
+			result += ' ';
 		}
 		return result;
 	}
+
 	public static Expr bigop(String op, Expr a, Expr b, Expr c) {
 		boolean tall = false;
 		StringBuilder result = new StringBuilder();
 		result.append("{");
 		result.append(op);
 		if (b != null) {
-			result.append("_{"+b.flatten(true)+"}");
-			tall =true;
+			result.append("_{" + b.flatten(true) + "}");
+			tall = true;
 		}
-		if (c!=null) {
-			result.append("^{"+c.flatten(true)+"}");
+		if (c != null) {
+			result.append("^{" + c.flatten(true) + "}");
 			tall = true;
 		}
 		result.append(a.flatten(true));
@@ -66,13 +82,15 @@ public class ExpTexUtils {
 
 	public static String bracket(String text, boolean tall) {
 		if (tall) {
-			return "\\left("+text+"\\right)";
+			return "\\left(" + text + "\\right)";
 		}
-		return '('+text+')';
+		return '(' + text + ')';
 	}
+
 	public static String sqBracket(String text) {
-		return "\\left["+text+"\\right]";
+		return "\\left[" + text + "\\right]";
 	}
+
 	public static Expr opExpr(String op, Expr a, Expr b) {
 		switch (op) {
 			case "and":
@@ -107,20 +125,20 @@ public class ExpTexUtils {
 	}
 
 	public static Expr enclose(Expr e, String left, String right) {
-		String begin = e.tall?"\\left"+left:left;
-		String end = e.tall?"\\right"+right:right;
+		String begin = e.tall ? "\\left" + left : left;
+		String end = e.tall ? "\\right" + right : right;
 		return new Expr().append(begin).appendAtomic(e).append(end).atomic();
 	}
 
 	public static Expr choose(Expr a, Expr b) {
-		return new Expr().atomic(bracket("\\begin{array}{c}"+a.flatten(true)+"\\\\"+b.flatten(true)+"\\end{array}", true)).tall();
+		return new Expr().atomic(bracket("\\begin{array}{c}" + a.flatten(true) + "\\\\" + b.flatten(true) + "\\end{array}", true)).tall();
 	}
 
 	public static String func(String s) {
 		if (s.startsWith(":")) {
 			s = s.substring(1);
 		}
-		return "\\mathrm{"+s+"}";
+		return "\\mathrm{" + s + "}";
 	}
 
 	public static Expr prob(Expr a, Expr b) {
@@ -130,7 +148,7 @@ public class ExpTexUtils {
 		result.append("\\Pr");
 		if (b != null) {
 			tall = true;
-			result.append("_{"+b.flatten(true)+"}");
+			result.append("_{" + b.flatten(true) + "}");
 		}
 		result.append(enclose(a, "[", "]").flatten(true));
 		if (a.tall) tall = true;

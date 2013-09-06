@@ -1,10 +1,7 @@
 package exptex;
 
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.NotNull;
-import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.RuleNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import static exptex.ExpTexUtils.*;
@@ -157,7 +154,7 @@ public class ExpTex2 {
 
 		@Override
 		public Expr visitMath_symbol(exptex2Parser.Math_symbolContext ctx) {
-			TerminalNode nonNull = coalesce(ctx.MATH_SYMBOL(), ctx.IN());
+			TerminalNode nonNull = coalesce(ctx.MATH_SYMBOL(), ctx.IN(), ctx.AND(), ctx.OR());
 			return new Expr().set(symbolToLaTeX(nonNull.getText()));
 		}
 
