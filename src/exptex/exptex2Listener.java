@@ -6,18 +6,18 @@ import org.antlr.v4.runtime.Token;
 public interface exptex2Listener extends ParseTreeListener {
 	void enterEntity_rm_id(exptex2Parser.Entity_rm_idContext ctx);
 	void exitEntity_rm_id(exptex2Parser.Entity_rm_idContext ctx);
-	void enterExpr_array(exptex2Parser.Expr_arrayContext ctx);
-	void exitExpr_array(exptex2Parser.Expr_arrayContext ctx);
 	void enterAtom_set(exptex2Parser.Atom_setContext ctx);
 	void exitAtom_set(exptex2Parser.Atom_setContext ctx);
+	void enterExpr_array(exptex2Parser.Expr_arrayContext ctx);
+	void exitExpr_array(exptex2Parser.Expr_arrayContext ctx);
 	void enterExpr_prime(exptex2Parser.Expr_primeContext ctx);
 	void exitExpr_prime(exptex2Parser.Expr_primeContext ctx);
 	void enterAtom_mod(exptex2Parser.Atom_modContext ctx);
 	void exitAtom_mod(exptex2Parser.Atom_modContext ctx);
-	void enterExpr_binop(exptex2Parser.Expr_binopContext ctx);
-	void exitExpr_binop(exptex2Parser.Expr_binopContext ctx);
 	void enterAtom_brackets(exptex2Parser.Atom_bracketsContext ctx);
 	void exitAtom_brackets(exptex2Parser.Atom_bracketsContext ctx);
+	void enterExpr_binop(exptex2Parser.Expr_binopContext ctx);
+	void exitExpr_binop(exptex2Parser.Expr_binopContext ctx);
 	void enterEntity_sf_id(exptex2Parser.Entity_sf_idContext ctx);
 	void exitEntity_sf_id(exptex2Parser.Entity_sf_idContext ctx);
 	void enterSum(exptex2Parser.SumContext ctx);
@@ -54,6 +54,8 @@ public interface exptex2Listener extends ParseTreeListener {
 	void exitAtom_choose(exptex2Parser.Atom_chooseContext ctx);
 	void enterEntity_bb_id(exptex2Parser.Entity_bb_idContext ctx);
 	void exitEntity_bb_id(exptex2Parser.Entity_bb_idContext ctx);
+	void enterMath_symbol_without_comma(exptex2Parser.Math_symbol_without_commaContext ctx);
+	void exitMath_symbol_without_comma(exptex2Parser.Math_symbol_without_commaContext ctx);
 	void enterExpr_impl_mult(exptex2Parser.Expr_impl_multContext ctx);
 	void exitExpr_impl_mult(exptex2Parser.Expr_impl_multContext ctx);
 	void enterStuff(exptex2Parser.StuffContext ctx);
@@ -66,4 +68,6 @@ public interface exptex2Listener extends ParseTreeListener {
 	void exitExpr_atom(exptex2Parser.Expr_atomContext ctx);
 	void enterComprehension(exptex2Parser.ComprehensionContext ctx);
 	void exitComprehension(exptex2Parser.ComprehensionContext ctx);
+	void enterStuff_without_comma(exptex2Parser.Stuff_without_commaContext ctx);
+	void exitStuff_without_comma(exptex2Parser.Stuff_without_commaContext ctx);
 }

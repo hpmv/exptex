@@ -9,18 +9,18 @@ import org.antlr.v4.runtime.tree.ErrorNode;
 public class exptex2BaseListener implements exptex2Listener {
 	@Override public void enterEntity_rm_id(exptex2Parser.Entity_rm_idContext ctx) { }
 	@Override public void exitEntity_rm_id(exptex2Parser.Entity_rm_idContext ctx) { }
-	@Override public void enterExpr_array(exptex2Parser.Expr_arrayContext ctx) { }
-	@Override public void exitExpr_array(exptex2Parser.Expr_arrayContext ctx) { }
 	@Override public void enterAtom_set(exptex2Parser.Atom_setContext ctx) { }
 	@Override public void exitAtom_set(exptex2Parser.Atom_setContext ctx) { }
+	@Override public void enterExpr_array(exptex2Parser.Expr_arrayContext ctx) { }
+	@Override public void exitExpr_array(exptex2Parser.Expr_arrayContext ctx) { }
 	@Override public void enterExpr_prime(exptex2Parser.Expr_primeContext ctx) { }
 	@Override public void exitExpr_prime(exptex2Parser.Expr_primeContext ctx) { }
 	@Override public void enterAtom_mod(exptex2Parser.Atom_modContext ctx) { }
 	@Override public void exitAtom_mod(exptex2Parser.Atom_modContext ctx) { }
-	@Override public void enterExpr_binop(exptex2Parser.Expr_binopContext ctx) { }
-	@Override public void exitExpr_binop(exptex2Parser.Expr_binopContext ctx) { }
 	@Override public void enterAtom_brackets(exptex2Parser.Atom_bracketsContext ctx) { }
 	@Override public void exitAtom_brackets(exptex2Parser.Atom_bracketsContext ctx) { }
+	@Override public void enterExpr_binop(exptex2Parser.Expr_binopContext ctx) { }
+	@Override public void exitExpr_binop(exptex2Parser.Expr_binopContext ctx) { }
 	@Override public void enterEntity_sf_id(exptex2Parser.Entity_sf_idContext ctx) { }
 	@Override public void exitEntity_sf_id(exptex2Parser.Entity_sf_idContext ctx) { }
 	@Override public void enterSum(exptex2Parser.SumContext ctx) { }
@@ -57,6 +57,8 @@ public class exptex2BaseListener implements exptex2Listener {
 	@Override public void exitAtom_choose(exptex2Parser.Atom_chooseContext ctx) { }
 	@Override public void enterEntity_bb_id(exptex2Parser.Entity_bb_idContext ctx) { }
 	@Override public void exitEntity_bb_id(exptex2Parser.Entity_bb_idContext ctx) { }
+	@Override public void enterMath_symbol_without_comma(exptex2Parser.Math_symbol_without_commaContext ctx) { }
+	@Override public void exitMath_symbol_without_comma(exptex2Parser.Math_symbol_without_commaContext ctx) { }
 	@Override public void enterExpr_impl_mult(exptex2Parser.Expr_impl_multContext ctx) { }
 	@Override public void exitExpr_impl_mult(exptex2Parser.Expr_impl_multContext ctx) { }
 	@Override public void enterStuff(exptex2Parser.StuffContext ctx) { }
@@ -69,6 +71,8 @@ public class exptex2BaseListener implements exptex2Listener {
 	@Override public void exitExpr_atom(exptex2Parser.Expr_atomContext ctx) { }
 	@Override public void enterComprehension(exptex2Parser.ComprehensionContext ctx) { }
 	@Override public void exitComprehension(exptex2Parser.ComprehensionContext ctx) { }
+	@Override public void enterStuff_without_comma(exptex2Parser.Stuff_without_commaContext ctx) { }
+	@Override public void exitStuff_without_comma(exptex2Parser.Stuff_without_commaContext ctx) { }
 
 	@Override public void enterEveryRule(ParserRuleContext ctx) { }
 	@Override public void exitEveryRule(ParserRuleContext ctx) { }

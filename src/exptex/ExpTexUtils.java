@@ -8,12 +8,51 @@ import java.util.*;
 
 public class ExpTexUtils {
 	private static Map<String, String> symbolToLaTeXMap = readMapFromFile("symbols.dat");
-	private static Map<String, String> idSubstitute = new HashMap<String, String>();
+	private static Map<String, String> idSubstitute = new HashMap<>();
+	private static Map<FuncSpec, Expr> funcs = readFuncSpecFromFile("funcs.dat");
 
 	static {
 		String[] escapes = readListFromFile("escapes.dat");
 		for (String escape : escapes) {
 			idSubstitute.put(escape, "\\" + escape + " ");
+		}
+	}
+
+	static class FuncSpec {
+		private final String name;
+		private final int numParam;
+
+		FuncSpec(String name, int numParam) {
+			this.name = name;
+			this.numParam = numParam;
+		}
+
+		String getName() {
+			return name;
+		}
+
+		int getNumParam() {
+			return numParam;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+
+			FuncSpec funcSpec = (FuncSpec) o;
+
+			if (numParam != funcSpec.numParam) return false;
+			if (!name.equals(funcSpec.name)) return false;
+
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = name.hashCode();
+			result = 31 * result + numParam;
+			return result;
 		}
 	}
 
@@ -36,6 +75,26 @@ public class ExpTexUtils {
 			things.put(line[0], line[1]);
 		}
 		return things;
+	}
+	private static Map<FuncSpec, Expr> readFuncSpecFromFile(String file) {
+		InputStream stream = ExpTexUtils.class.getClassLoader().getResourceAsStream("exptex/" + file);
+		Scanner scanner = new Scanner(stream);
+		Map<FuncSpec, Expr> funcs = new HashMap<>();
+		while(scanner.hasNextLine()) {
+			String[] line = scanner.nextLine().split(" ", 4);
+			if (line[0].startsWith("#")) continue;
+			Expr expr = new Expr();
+			expr.set(line[3]);
+			String[] traits = line[2].split(",");
+			for (int i = 0; i < traits.length; i++) {
+				String trait = traits[i];
+				if ("atomic".equals(trait)) expr.atomic();
+				if ("brackets".equals(trait)) expr.brackets = true;
+				if ("tall".equals(trait)) expr.tall();
+			}
+			funcs.put(new FuncSpec(line[0], Integer.parseInt(line[1])), expr);
+		}
+		return funcs;
 	}
 
 	@SafeVarargs
@@ -156,5 +215,51 @@ public class ExpTexUtils {
 		Expr e = new Expr().atomic(result.toString());
 		e.tall = tall;
 		return e;
+	}
+
+	public static Expr translateFunc(Expr func, List<Expr> args) {
+		FuncSpec spec = new FuncSpec(func.value, args.size());
+		if (funcs.containsKey(spec)) {
+			Expr expr = new Expr().inherit(funcs.get(spec));
+			String base = expr.value;
+			StringBuilder result = new StringBuilder();
+
+			for (int i = 0; i < base.length(); i++) {
+				char c = base.charAt(i);
+				if (c != '#' && c != '$') {
+					result.append(c);
+				} else {
+					i++;
+					int from = i;
+					while (i < base.length()) {
+						char n = base.charAt(i);
+						if (n <= '9' && n >= '0') {
+							i++;
+						} else {
+							break;
+						}
+					}
+					String num = base.substring(from, i);
+					int numInt = Integer.parseInt(num);
+					Expr argExpr = args.get(numInt - 1);
+					String arg = argExpr.flattenAndEnsureBrackets(c == '#');
+					result.append(arg);
+					if (argExpr.tall) expr.tall();
+					i--;
+				}
+			}
+			expr.value = result.toString();
+			return expr;
+		} else {
+			Expr enclosed = new Expr();
+			for (int i = 0; i < args.size(); i++) {
+				if (i != 0) {
+					enclosed.append(",");
+				}
+				Expr arg = args.get(i);
+				enclosed.append(arg);
+			}
+			return new Expr().inherit(func).append(ExpTexUtils.enclose(enclosed, "(", ")"));
+		}
 	}
 }

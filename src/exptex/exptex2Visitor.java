@@ -5,12 +5,12 @@ import org.antlr.v4.runtime.Token;
 
 public interface exptex2Visitor<T> extends ParseTreeVisitor<T> {
 	T visitEntity_rm_id(exptex2Parser.Entity_rm_idContext ctx);
-	T visitExpr_array(exptex2Parser.Expr_arrayContext ctx);
 	T visitAtom_set(exptex2Parser.Atom_setContext ctx);
+	T visitExpr_array(exptex2Parser.Expr_arrayContext ctx);
 	T visitExpr_prime(exptex2Parser.Expr_primeContext ctx);
 	T visitAtom_mod(exptex2Parser.Atom_modContext ctx);
-	T visitExpr_binop(exptex2Parser.Expr_binopContext ctx);
 	T visitAtom_brackets(exptex2Parser.Atom_bracketsContext ctx);
+	T visitExpr_binop(exptex2Parser.Expr_binopContext ctx);
 	T visitEntity_sf_id(exptex2Parser.Entity_sf_idContext ctx);
 	T visitSum(exptex2Parser.SumContext ctx);
 	T visitExpr_negate(exptex2Parser.Expr_negateContext ctx);
@@ -29,10 +29,12 @@ public interface exptex2Visitor<T> extends ParseTreeVisitor<T> {
 	T visitAlign(exptex2Parser.AlignContext ctx);
 	T visitAtom_choose(exptex2Parser.Atom_chooseContext ctx);
 	T visitEntity_bb_id(exptex2Parser.Entity_bb_idContext ctx);
+	T visitMath_symbol_without_comma(exptex2Parser.Math_symbol_without_commaContext ctx);
 	T visitExpr_impl_mult(exptex2Parser.Expr_impl_multContext ctx);
 	T visitStuff(exptex2Parser.StuffContext ctx);
 	T visitStart(exptex2Parser.StartContext ctx);
 	T visitExpr_func(exptex2Parser.Expr_funcContext ctx);
 	T visitExpr_atom(exptex2Parser.Expr_atomContext ctx);
 	T visitComprehension(exptex2Parser.ComprehensionContext ctx);
+	T visitStuff_without_comma(exptex2Parser.Stuff_without_commaContext ctx);
 }

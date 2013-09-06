@@ -32,11 +32,13 @@ STRING : '"' ( '\\"' | . )*? '"' ;
 
 DIVDIV: '//';
 DIV: '/';
+COMMA: ',';
 
-MATH_SYMBOL: '....' |'...' | '==' | '<=>' |  '->' | '>' | '<' | '=>' | '=' | '<=' | '>=' | '.' | ',' | '<--' | ':';
+MATH_SYMBOL: '....' |'...' | '==' | '<=>' |  '->' | '>' | '<' | '=>' | '=' | '<=' | '>=' | '.' | '<--' | ':';
 DOT_DOT: '..';
 
-math_symbol: MATH_SYMBOL | AND | OR | IN;
+math_symbol: MATH_SYMBOL | AND | OR | IN | COMMA;
+math_symbol_without_comma: MATH_SYMBOL | AND | OR | IN;
 
 entity: ID          #entity_id
       | NUM         #entity_num
@@ -52,7 +54,7 @@ expr
     //| expr '_' expr '^' expr                                    #expr_sub_sup
     //| expr (op='^'<assoc=right>|op='_'<assoc=right>) expr       #expr_binop
     | expr op=('^'|'_') expr                                    #expr_binop
-    | expr '(' stuff ')'                                        #expr_func
+    | expr '(' stuff_without_comma (COMMA stuff_without_comma)* ')'                                        #expr_func
     | expr '[' stuff ']'                                        #expr_array
     | expr {notminus()}? expr                                                 #expr_impl_mult
     | expr op=DIVDIV expr                                       #expr_binop
@@ -65,6 +67,9 @@ expr
 
 stuff
     : math_symbol* (minus_expr (math_symbol+ minus_expr)* math_symbol*)?;
+
+stuff_without_comma
+    : math_symbol_without_comma* (minus_expr (math_symbol_without_comma+ minus_expr)* math_symbol_without_comma*)?;
 
 minus_expr
     : '-' expr          #minus_expr_minus

@@ -4,6 +4,9 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static exptex.ExpTexUtils.*;
 
 public class ExpTex2 {
@@ -64,33 +67,34 @@ public class ExpTex2 {
 
 		@Override
 		public Expr visitEntity_bb_id(exptex2Parser.Entity_bb_idContext ctx) {
-			return new Expr().set("\\mathbb{" + id(ctx.BB_ID().getText().substring(1)) + "}");
+			return new Expr()
+					.set("\\mathbb{" + id(ctx.BB_ID().getText().substring(1)) + "}").atomic();
 		}
 
 		@Override
 		public Expr visitEntity_id(exptex2Parser.Entity_idContext ctx) {
-			return new Expr().set(id(ctx.ID().getText()));
+			return new Expr().atomic(id(ctx.ID().getText())); // TODO: always atomic??
 		}
 
 		@Override
 		public Expr visitEntity_num(exptex2Parser.Entity_numContext ctx) {
-			return new Expr().set(ctx.NUM().getText());
+			return new Expr().atomic(ctx.NUM().getText());
 		}
 
 		@Override
 		public Expr visitEntity_rm_id(exptex2Parser.Entity_rm_idContext ctx) {
-			return new Expr().set("\\mathrm{" + id(ctx.RM_ID().getText().substring(1)) + "}");
+			return new Expr().atomic("\\mathrm{" + id(ctx.RM_ID().getText().substring(1)) + "}");
 		}
 
 		@Override
 		public Expr visitEntity_sf_id(exptex2Parser.Entity_sf_idContext ctx) {
-			return new Expr().set("\\mathsf{" + id(ctx.SF_ID().getText().substring(1)) + "}");
+			return new Expr().atomic("\\mathsf{" + id(ctx.SF_ID().getText().substring(1)) + "}");
 		}
 
 		@Override
 		public Expr visitEntity_string(exptex2Parser.Entity_stringContext ctx) {
 			String str = ctx.STRING().getText();
-			return new Expr().set(str.substring(1, str.length() - 1));
+			return new Expr().atomic(str.substring(1, str.length() - 1));
 		}
 
 		@Override
@@ -116,8 +120,11 @@ public class ExpTex2 {
 
 		@Override
 		public Expr visitExpr_func(exptex2Parser.Expr_funcContext ctx) {
-			return new Expr().inherit(visit(ctx.expr()))
-					.append(exptex.ExpTexUtils.enclose(visit(ctx.stuff()), "(", ")"));
+			List<Expr> args = new ArrayList<>();
+			for (ParseTree stuff : ctx.stuff_without_comma()) {
+				args.add(visit(stuff));
+			}
+			return ExpTexUtils.translateFunc(visit(ctx.expr()), args);
 		}
 
 		@Override
@@ -154,6 +161,12 @@ public class ExpTex2 {
 
 		@Override
 		public Expr visitMath_symbol(exptex2Parser.Math_symbolContext ctx) {
+			TerminalNode nonNull = coalesce(ctx.MATH_SYMBOL(), ctx.IN(), ctx.AND(), ctx.OR(), ctx.COMMA());
+			return new Expr().set(symbolToLaTeX(nonNull.getText()));
+		}
+
+		@Override
+		public Expr visitMath_symbol_without_comma(exptex2Parser.Math_symbol_without_commaContext ctx) {
 			TerminalNode nonNull = coalesce(ctx.MATH_SYMBOL(), ctx.IN(), ctx.AND(), ctx.OR());
 			return new Expr().set(symbolToLaTeX(nonNull.getText()));
 		}

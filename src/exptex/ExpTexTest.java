@@ -85,6 +85,7 @@ public class ExpTexTest {
 		test("a+b*c/8+d", "a+b\\cdot \\frac{c}{8}+d");
 		test("88+9k/7", "88+\\frac{9k}{7}");
 		test("a^b*c", "a^{b}\\cdot c");
+		test("2x^7y^8", "2x^{7}y^{8}");
 		test("2x^7 y^8", "2x^{7}y^{8}");
 		test("G_k(x)", "G_{k}(x)");
 	}
@@ -129,5 +130,22 @@ public class ExpTexTest {
 	@Test
 	public void testAndOr() {
 		test("a and b", "a\\wedge b");
+	}
+
+	@Test
+	public void testFunctions() {
+		test("sqrt(a)", "\\sqrt{a}");
+		test("sqrt(b,c)", "\\sqrt[c]{b}");
+		test("sqrt(b, c)", "\\sqrt[c]{b}");
+		test("sqrt(b,c,d)", "sqrt(b,c,d)");
+		test("sqrt(2+8)", "\\sqrt{2+8}");
+		test("(sqrt(a))+8", "\\sqrt{a}+8");
+		test("((sqrt(a)))+8", "(\\sqrt{a})+8");
+		test("log(a,b)", "\\log_{b} a");
+		test("log(4,5)", "\\log_{5} 4");
+		test("log(4, 5)", "\\log_{5} 4");
+		test("log(4,  5)", "\\log_{5} 4");
+		test("log(4, 5+7)", "\\log_{5+7} 4");
+		test("log(4+8, 5+7)", "\\log_{5+7} (4+8)");
 	}
 }

@@ -1,0 +1,4 @@
+sqrt 1 atomic \sqrt{#1}
+sqrt 2 atomic \sqrt[#2]{#1}
+log 1 normal \log $1
+log 2 normal \log_{#2} $1
